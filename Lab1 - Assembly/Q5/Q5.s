@@ -1,13 +1,11 @@
-
- // Q4.s
- // Author: Alperen Arslan
- //
+ // Q2.s
+ // Author     : Furkan Cayci
+ // Arrangement: Alperen Arslan
 
 .syntax unified
 .cpu cortex-m0plus
 .fpu softvfp
 .thumb
-
 
 // make linker see this
 .global Reset_Handler
@@ -18,16 +16,17 @@
 .word _sbss
 .word _ebss
 
-
 // define clock base and enable addresses
 .equ RCC_BASE,         (0x40021000)          // RCC base address
 .equ RCC_IOPENR,       (RCC_BASE   + (0x34)) // RCC IOPENR register offset
 
 // define GPIO Base, Moder and ODR pin addresses
-.equ GPIOB_BASE,       (0x50000400)          // GPIOA base address
-.equ GPIOB_MODER,      (GPIOA_BASE + (0x00)) // GPIOA MODER register offset
-.equ GPIOB_IDR,        (GPIOA_BASE + (0x10)) // GPIOA IDR register offset
-.equ GPIOB_ODR,        (GPIOA_BASE + (0x14)) // GPIOA IDR register offset
+.equ GPIOB_BASE,       (0x50000400)          // GPIOB base address
+.equ GPIOB_MODER,      (GPIOB_BASE + (0x00)) // GPIOB MODER register offset
+.equ GPIOB_ODR,        (GPIOB_BASE + (0x14)) // GPIOB ODR register offset
+
+//Delay Interval
+.equ delayInterval, 0x30C008
 
 // vector table, +1 thumb mode
 .section .vectors
@@ -37,7 +36,6 @@ vector_table:
 	.word Default_Handler +1  //       NMI handler
 	.word Default_Handler +1  // HardFault handler
 	// add rest of them here if needed
-
 
 // reset handler
 .section .text
@@ -54,7 +52,6 @@ Reset_Handler:
 	bl main
 	// trap if returned
 	b .
-
 
 // initialize data and bss sections
 .section .text
@@ -93,17 +90,15 @@ init_data:
 
 	bx lr
 
-
 // default handler
 .section .text
 Default_Handler:
 	b Default_Handler
 
-
 // main function
 .section .text
 main:
-	// enable GPIOA clock, bit2 on IOPENR
+	// enable GPIOB clock, bit2 on IOPENR
 	ldr r6, =RCC_IOPENR
 	ldr r5, [r6]
 	// movs expects imm8, so this should be fine
@@ -111,36 +106,51 @@ main:
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// setup PB4 and PB5 for button and led 00 and 01 in MODER
+	// setup PB4 for led 01 for in MODER
 	ldr r6, =GPIOB_MODER
 	ldr r5, [r6]
 	// cannot do with movs, so use pc relative
-	ldr r4, =[0xF00]
+	movs r4, 0x3
+	lsls r4, r4, #8
 	bics r5, r5, r4
-	ldr r4, =[0x1FF]
+	movs r4, 0x1
+	lsls r4, r4, #8
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// turn on led connected PA11 if button is pressed
+// Create a loop for toggle led
 loop:
-	ldr r6, = GPIOB_ODR
-	ldr r7, = GPIOB_IDR
+	// turn on led connected to PB4 in ODR
+	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, [r7]
-
-	cmp r4, 0x1
-	bne Less
-	movs r5, 0x1
-	lsls r5, r5, #3
-	b Both
-	Less:
-	movs r5, 0x0
-	lsls r5, r5 #3
-	Both:
+	movs r4, 0x1
+	lsls r4, r4, #4
+	orrs r5, r5, r4
 	str r5, [r6]
-	str r4, [r7]
+
+	// Assign value to register r1 to sub 1 per clock
+	ldr r1, =delayInterval
+	bl delay
+
+	// turn off led connected to PB4 in ODR
+	ldr r6, =GPIOB_ODR
+	ldr r5, [r6]
+	movs r4, 0x1
+	lsls r4, r4, #4
+	bics r5, r5, r4
+	str r5, [r6]
+
+	// Assign value to register r1 to sub 1 per clock
+	ldr r1, =delayInterval
+	bl delay
 
 	b loop
 
-	/* this should never get executed */
+//Create a delay function to sub 1 from r1 register
+delay:
+	subs r1, r1, #1
+	bne delay
+	bx lr
+
+	//this should never get executed
 	nop

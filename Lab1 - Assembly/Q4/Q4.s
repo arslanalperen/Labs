@@ -1,15 +1,11 @@
-/*
- * Q4.s
-
- // Q2.s
- // Author     : Furkan Cayci
- // Arrangement: Alperen Arslan 
+ // Q4.s
+ // Author: Alperen Arslan
+ //
 
 .syntax unified
 .cpu cortex-m0plus
 .fpu softvfp
 .thumb
-
 
 // make linker see this
 .global Reset_Handler
@@ -27,7 +23,8 @@
 // define GPIO Base, Moder and ODR pin addresses
 .equ GPIOB_BASE,       (0x50000400)          // GPIOB base address
 .equ GPIOB_MODER,      (GPIOB_BASE + (0x00)) // GPIOB MODER register offset
-.equ GPIOB_ODR,        (GPIOB_BASE + (0x14)) // GPIOB ODR register offset
+.equ GPIOB_IDR,        (GPIOB_BASE + (0x10)) // GPIOB IDR register offset
+.equ GPIOB_ODR,        (GPIOB_BASE + (0x14)) // GPIOB IDR register offset
 
 // vector table, +1 thumb mode
 .section .vectors
@@ -45,8 +42,8 @@ Reset_Handler:
 	ldr r0, =_estack
 	mov sp, r0
 
-	// initialize data and bss 
-	// not necessary for rom only code 
+	// initialize data and bss
+	// not necessary for rom only code
 
 	bl init_data
 	// call main
@@ -99,7 +96,7 @@ Default_Handler:
 // main function
 .section .text
 main:
-	// enable GPIOB clock, bit2 on IOPENR
+	// enable GPIOA clock, bit2 on IOPENR
 	ldr r6, =RCC_IOPENR
 	ldr r5, [r6]
 	// movs expects imm8, so this should be fine
@@ -107,25 +104,44 @@ main:
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// setup PB4 for button in MODER
+	// setup PB4 and PB5 for button and led 00 and 01 in MODER
 	ldr r6, =GPIOB_MODER
 	ldr r5, [r6]
 	// cannot do with movs, so use pc relative
-	movs r4, 0x3
-	lsls r4, r4, #8
+	ldr r4, =[0x30300]
 	bics r5, r5, r4
-	movs r4, 0x1
-	lsls r4, r4, #8
+	ldr r4, =[0xCFDFF]
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// turn on button connected to PB4 in ODR
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
-	movs r4, 0x1
-	lsls r4, r4, #4
+	// turn on led connected PA11 if button is pressed
+loop:
+	ldr r6, = GPIOB_IDR
+	ldr r5, [r6] //ODR Value
+	lsrs r5, r5, #4
+	movs r4, #0x1
+	ands r5, r5, r4
+
+	cmp r5, 0x1 //Compare IDR Value with 1 bit
+	bne BNE //If not equal
+	beq BEQ
+	//If is equal
+
+	BEQ:
+	ldr r6, = GPIOB_ODR
+	ldr r5, [r6] //IDR Value
+	movs r4, 0x10
 	orrs r5, r5, r4
 	str r5, [r6]
+	b loop
+	//If is not equal
+	BNE:
+	ldr r6, = GPIOB_ODR
+	ldr r5, [r6] //IDR Value
+	movs r4, 0x10
+	bics r5, r5, r4
+	str r5, [r6]
+	b loop
 
-	//this should never get executed
+	/* this should never get executed */
 	nop
