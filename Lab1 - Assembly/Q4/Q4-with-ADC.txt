@@ -24,9 +24,10 @@
 .equ RCC_IOPENR,       (RCC_BASE   + (0x34)) // RCC IOPENR register offset
 
 // define GPIO Base, Moder and ODR pin addresses
-.equ GPIOA_BASE,       (0x50000000)          // GPIOA base address
-.equ GPIOA_MODER,      (GPIOA_BASE + (0x00)) // GPIOA MODER register offset
-.equ GPIOA_IDR,        (GPIOA_BASE + (0x10)) // GPIOA IDR register offset
+.equ GPIOB_BASE,       (0x50000400)          // GPIOA base address
+.equ GPIOB_MODER,      (GPIOA_BASE + (0x00)) // GPIOA MODER register offset
+.equ GPIOB_IDR,        (GPIOA_BASE + (0x10)) // GPIOA IDR register offset
+.equ GPIOB_ODR,        (GPIOA_BASE + (0x14)) // GPIOA IDR register offset
 
 // vector table, +1 thumb mode
 .section .vectors
@@ -106,37 +107,35 @@ main:
 	ldr r6, =RCC_IOPENR
 	ldr r5, [r6]
 	// movs expects imm8, so this should be fine
-	movs r4, 0x1
+	movs r4, 0x2
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// setup PA0 and PA11 for button and led 00 and 01 in MODER
-	ldr r6, =GPIOA_MODER
+	// setup PB4 and PB5 for button and led 00 and 01 in MODER
+	ldr r6, =GPIOB_MODER
 	ldr r5, [r6]
 	// cannot do with movs, so use pc relative
-	ldr r4, =[0xC00003]
+	ldr r4, =[0xF00]
 	bics r5, r5, r4
-	ldr r4, =[0x7FFFFC]
+	ldr r4, =[0x1FF]
 	orrs r5, r5, r4
 	str r5, [r6]
 
 	// turn on led connected PA11 if button is pressed
 loop:
-	ldr r6, = GPIOA_ODR
-	ldr r7, = GPIOA_IDR
+	ldr r6, = GPIOB_ODR
+	ldr r7, = GPIOB_IDR
 	ldr r5, [r6]
 	ldr r4, [r7]
 
-	cmp r4, 0x266
-	jl Less
+	cmp r4, 0x1
+	bne Less
 	movs r5, 0x1
-	lsls r5, r5, #10
-	movs r4, 0x1
-	jmp Both
+	lsls r5, r5, #3
+	b Both
 	Less:
 	movs r5, 0x0
-	lsls r5, r5 #10
-	movs r4, 0x0
+	lsls r5, r5 #3
 	Both:
 	str r5, [r6]
 	str r4, [r7]

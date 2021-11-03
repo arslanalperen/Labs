@@ -1,7 +1,7 @@
 
  // Q2.s
  // Author     : Furkan Cayci
- // Arrangement: Alperen Arslan 
+ // Arrangement: Alperen Arslan
 
 .syntax unified
 .cpu cortex-m0plus
@@ -43,8 +43,8 @@ Reset_Handler:
 	ldr r0, =_estack
 	mov sp, r0
 
-	// initialize data and bss 
-	// not necessary for rom only code 
+	// initialize data and bss
+	// not necessary for rom only code
 
 	bl init_data
 	// call main
@@ -126,9 +126,9 @@ loop:
 	lsls r4, r4, #4
 	orrs r5, r5, r4
 	str r5, [r6]
-	
+
 	// Assign value to register r1 to sub 1 per clock
-	ldr r1, =#1000000
+	ldr r1, =#1600000
 	bl delay
 
 	// turn off led connected to PB4 in ODR
@@ -138,9 +138,9 @@ loop:
 	lsls r4, r4, #4
 	bics r5, r5, r4
 	str r5, [r6]
-	
+
 	// Assign value to register r1 to sub 1 per clock
-	ldr r1, =#10000000
+	ldr r1, =#1600000
 	bl delay
 
 	b loop
