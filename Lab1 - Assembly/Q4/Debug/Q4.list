@@ -140,7 +140,7 @@ Default_Handler:
 // main function
 .section .text
 main:
-	// enable GPIOA clock, bit2 on IOPENR
+	// enable GPIOB clock, bit1 on IOPENR
 	ldr r6, =RCC_IOPENR
  8000058:	4e16      	ldr	r6, [pc, #88]	; (80000b4 <BNE+0x28>)
 	ldr r5, [r6]
@@ -153,7 +153,7 @@ main:
 	str r5, [r6]
  8000060:	6035      	str	r5, [r6, #0]
 
-	// setup PB4 and PB5 for button and led 00 and 01 in MODER
+	// setup PB4 and PB5 for button and led 01 and 00 in MODER
 	ldr r6, =GPIOB_MODER
  8000062:	4e15      	ldr	r6, [pc, #84]	; (80000b8 <BNE+0x2c>)
 	ldr r5, [r6]
@@ -172,37 +172,37 @@ main:
 
 08000070 <loop>:
 
-	// turn on led connected PA11 if button is pressed
+	// turn on led connected PB5 if button is pressed
 loop:
 	ldr r6, = GPIOB_IDR
  8000070:	4e14      	ldr	r6, [pc, #80]	; (80000c4 <BNE+0x38>)
-	ldr r5, [r6] //ODR Value
+	ldr r5, [r6] //IDR Value
  8000072:	6835      	ldr	r5, [r6, #0]
-	lsrs r5, r5, #4
- 8000074:	092d      	lsrs	r5, r5, #4
+	lsrs r5, r5, #8 // Shifting to first bit
+ 8000074:	0a2d      	lsrs	r5, r5, #8
 	movs r4, #0x1
  8000076:	2401      	movs	r4, #1
-	ands r5, r5, r4
+	ands r5, r5, r4 //Getting the value of button pressed or not
  8000078:	4025      	ands	r5, r4
 
-	cmp r5, 0x1 //Compare IDR Value with 1 bit
+	cmp r5, #0x1 //Compare IDR Value with 1 bit
  800007a:	2d01      	cmp	r5, #1
 	bne BNE //If not equal
  800007c:	d106      	bne.n	800008c <BNE>
-	beq BEQ
+	beq BEQ //If equal
  800007e:	d0ff      	beq.n	8000080 <BEQ>
 
 08000080 <BEQ>:
-	//If is equal
 
+	//If is equal
 	BEQ:
 	ldr r6, = GPIOB_ODR
  8000080:	4e11      	ldr	r6, [pc, #68]	; (80000c8 <BNE+0x3c>)
-	ldr r5, [r6] //IDR Value
+	ldr r5, [r6] //ODR Value
  8000082:	6835      	ldr	r5, [r6, #0]
 	movs r4, 0x10
  8000084:	2410      	movs	r4, #16
-	orrs r5, r5, r4
+	orrs r5, r5, r4 //Setting led on
  8000086:	4325      	orrs	r5, r4
 	str r5, [r6]
  8000088:	6035      	str	r5, [r6, #0]
@@ -210,15 +210,16 @@ loop:
  800008a:	e7f1      	b.n	8000070 <loop>
 
 0800008c <BNE>:
+
 	//If is not equal
 	BNE:
 	ldr r6, = GPIOB_ODR
  800008c:	4e0e      	ldr	r6, [pc, #56]	; (80000c8 <BNE+0x3c>)
-	ldr r5, [r6] //IDR Value
+	ldr r5, [r6] //ODR Value
  800008e:	6835      	ldr	r5, [r6, #0]
 	movs r4, 0x10
  8000090:	2410      	movs	r4, #16
-	bics r5, r5, r4
+	bics r5, r5, r4 //Setting led off
  8000092:	43a5      	bics	r5, r4
 	str r5, [r6]
  8000094:	6035      	str	r5, [r6, #0]

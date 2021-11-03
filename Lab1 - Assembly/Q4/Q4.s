@@ -96,7 +96,7 @@ Default_Handler:
 // main function
 .section .text
 main:
-	// enable GPIOA clock, bit2 on IOPENR
+	// enable GPIOB clock, bit1 on IOPENR
 	ldr r6, =RCC_IOPENR
 	ldr r5, [r6]
 	// movs expects imm8, so this should be fine
@@ -104,7 +104,7 @@ main:
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// setup PB4 and PB5 for button and led 00 and 01 in MODER
+	// setup PB4 and PB5 for button and led 01 and 00 in MODER
 	ldr r6, =GPIOB_MODER
 	ldr r5, [r6]
 	// cannot do with movs, so use pc relative
@@ -114,32 +114,33 @@ main:
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// turn on led connected PA11 if button is pressed
+	// turn on led connected PB5 if button is pressed
 loop:
 	ldr r6, = GPIOB_IDR
-	ldr r5, [r6] //ODR Value
-	lsrs r5, r5, #4
+	ldr r5, [r6] //IDR Value
+	lsrs r5, r5, #8 // Shifting to first bit
 	movs r4, #0x1
-	ands r5, r5, r4
+	ands r5, r5, r4 //Getting the value of button pressed or not
 
-	cmp r5, 0x1 //Compare IDR Value with 1 bit
+	cmp r5, #0x1 //Compare IDR Value with 1 bit
 	bne BNE //If not equal
-	beq BEQ
-	//If is equal
+	beq BEQ //If equal
 
+	//If is equal
 	BEQ:
 	ldr r6, = GPIOB_ODR
-	ldr r5, [r6] //IDR Value
+	ldr r5, [r6] //ODR Value
 	movs r4, 0x10
-	orrs r5, r5, r4
+	orrs r5, r5, r4 //Setting led on
 	str r5, [r6]
 	b loop
+
 	//If is not equal
 	BNE:
 	ldr r6, = GPIOB_ODR
-	ldr r5, [r6] //IDR Value
+	ldr r5, [r6] //ODR Value
 	movs r4, 0x10
-	bics r5, r5, r4
+	bics r5, r5, r4 //Setting led off
 	str r5, [r6]
 	b loop
 
