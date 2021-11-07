@@ -27,7 +27,7 @@
 .equ GPIOB_ODR,        (GPIOB_BASE + (0x14)) // GPIOB IDR register offset
 
 //Delay Interval
-.equ delayInterval, 0x30C008
+.equ delayInterval, 2000000
 
 // vector table, +1 thumb mode
 .section .vectors
