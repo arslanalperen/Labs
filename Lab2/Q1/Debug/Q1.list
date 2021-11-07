@@ -1,0 +1,367 @@
+
+Q1.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000130  08000000  08000000  00010000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .init         00000004  08000130  08000130  00010130  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .fini         00000004  08000134  08000134  00010134  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .data         00000000  20000000  20000000  00010138  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 .bss          00000000  20000000  20000000  00000000  2**0
+                  ALLOC
+  5 .ARM.attributes 00000028  00000000  00000000  00010138  2**0
+                  CONTENTS, READONLY
+  6 .debug_line   000000ab  00000000  00000000  00010160  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  7 .debug_info   00000026  00000000  00000000  0001020b  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  8 .debug_abbrev 00000014  00000000  00000000  00010231  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  9 .debug_aranges 00000020  00000000  00000000  00010248  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 10 .debug_str    0000003c  00000000  00000000  00010268  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000000 <vector_table>:
+ 8000000:	20002000 	.word	0x20002000
+ 8000004:	08000021 	.word	0x08000021
+ 8000008:	08000057 	.word	0x08000057
+ 800000c:	08000057 	.word	0x08000057
+ 8000010:	20000000 	.word	0x20000000
+ 8000014:	20000000 	.word	0x20000000
+ 8000018:	20000000 	.word	0x20000000
+ 800001c:	20000000 	.word	0x20000000
+
+08000020 <Reset_Handler>:
+
+// reset handler
+.section .text
+Reset_Handler:
+	// set stack pointer
+	ldr r0, =_estack
+ 8000020:	4831      	ldr	r0, [pc, #196]	; (80000e8 <BNE+0x4>)
+	mov sp, r0
+ 8000022:	4685      	mov	sp, r0
+
+	// initialize data and bss
+	// not necessary for rom only code
+
+	bl init_data
+ 8000024:	f000 f803 	bl	800002e <init_data>
+	// call main
+	bl main
+ 8000028:	f000 f816 	bl	8000058 <main>
+	// trap if returned
+	b .
+ 800002c:	e7fe      	b.n	800002c <Reset_Handler+0xc>
+
+0800002e <init_data>:
+// initialize data and bss sections
+.section .text
+init_data:
+
+	// copy rom to ram
+	ldr r0, =_sdata
+ 800002e:	482f      	ldr	r0, [pc, #188]	; (80000ec <BNE+0x8>)
+	ldr r1, =_edata
+ 8000030:	492f      	ldr	r1, [pc, #188]	; (80000f0 <BNE+0xc>)
+	ldr r2, =_sidata
+ 8000032:	4a30      	ldr	r2, [pc, #192]	; (80000f4 <BNE+0x10>)
+	movs r3, #0
+ 8000034:	2300      	movs	r3, #0
+	b LoopCopyDataInit
+ 8000036:	e002      	b.n	800003e <LoopCopyDataInit>
+
+08000038 <CopyDataInit>:
+
+	CopyDataInit:
+		ldr r4, [r2, r3]
+ 8000038:	58d4      	ldr	r4, [r2, r3]
+		str r4, [r0, r3]
+ 800003a:	50c4      	str	r4, [r0, r3]
+		adds r3, r3, #4
+ 800003c:	3304      	adds	r3, #4
+
+0800003e <LoopCopyDataInit>:
+
+	LoopCopyDataInit:
+		adds r4, r0, r3
+ 800003e:	18c4      	adds	r4, r0, r3
+		cmp r4, r1
+ 8000040:	428c      	cmp	r4, r1
+		bcc CopyDataInit
+ 8000042:	d3f9      	bcc.n	8000038 <CopyDataInit>
+
+	// zero bss
+	ldr r2, =_sbss
+ 8000044:	4a2c      	ldr	r2, [pc, #176]	; (80000f8 <BNE+0x14>)
+	ldr r4, =_ebss
+ 8000046:	4c2d      	ldr	r4, [pc, #180]	; (80000fc <BNE+0x18>)
+	movs r3, #0
+ 8000048:	2300      	movs	r3, #0
+	b LoopFillZerobss
+ 800004a:	e001      	b.n	8000050 <LoopFillZerobss>
+
+0800004c <FillZerobss>:
+
+	FillZerobss:
+		str  r3, [r2]
+ 800004c:	6013      	str	r3, [r2, #0]
+		adds r2, r2, #4
+ 800004e:	3204      	adds	r2, #4
+
+08000050 <LoopFillZerobss>:
+
+	LoopFillZerobss:
+		cmp r2, r4
+ 8000050:	42a2      	cmp	r2, r4
+		bcc FillZerobss
+ 8000052:	d3fb      	bcc.n	800004c <FillZerobss>
+
+	bx lr
+ 8000054:	4770      	bx	lr
+
+08000056 <Default_Handler>:
+
+// default handler
+.section .text
+Default_Handler:
+	b Default_Handler
+ 8000056:	e7fe      	b.n	8000056 <Default_Handler>
+
+08000058 <main>:
+
+// main function
+.section .text
+main:
+	// enable GPIOB clock, bit1 on IOPENR
+	ldr r6, =RCC_IOPENR
+ 8000058:	4e29      	ldr	r6, [pc, #164]	; (8000100 <BNE+0x1c>)
+	ldr r5, [r6]
+ 800005a:	6835      	ldr	r5, [r6, #0]
+	// movs expects imm8, so this should be fine
+	movs r4, 0x2
+ 800005c:	2402      	movs	r4, #2
+	orrs r5, r5, r4
+ 800005e:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 8000060:	6035      	str	r5, [r6, #0]
+
+	// setup PB4 and PB5 for button and led 01 and 00 in MODER
+	ldr r6, =GPIOB_MODER
+ 8000062:	4e28      	ldr	r6, [pc, #160]	; (8000104 <BNE+0x20>)
+	ldr r5, [r6]
+ 8000064:	6835      	ldr	r5, [r6, #0]
+	// cannot do with movs, so use pc relative
+	ldr r5, =[0xFFFFF]
+ 8000066:	4d28      	ldr	r5, [pc, #160]	; (8000108 <BNE+0x24>)
+	str r5, [r6]
+ 8000068:	6035      	str	r5, [r6, #0]
+	ldr r4, =[0x5C555]
+ 800006a:	4c28      	ldr	r4, [pc, #160]	; (800010c <BNE+0x28>)
+	ands r5, r5, r4
+ 800006c:	4025      	ands	r5, r4
+	str r5, [r6]
+ 800006e:	6035      	str	r5, [r6, #0]
+
+	bl statusLed
+ 8000070:	f000 f82e 	bl	80000d0 <statusLed>
+
+08000074 <play>:
+
+play:
+	// 1. Katman
+	ldr r4, =[0x100]
+ 8000074:	4c26      	ldr	r4, [pc, #152]	; (8000110 <BNE+0x2c>)
+	bl ledsOn
+ 8000076:	f000 f81f 	bl	80000b8 <ledsOn>
+	bl statusLed
+ 800007a:	f000 f829 	bl	80000d0 <statusLed>
+
+	// 3. Katman
+	ldr r4, =[0x304]
+ 800007e:	4c25      	ldr	r4, [pc, #148]	; (8000114 <BNE+0x30>)
+	bl ledsOn
+ 8000080:	f000 f81a 	bl	80000b8 <ledsOn>
+	bl statusLed
+ 8000084:	f000 f824 	bl	80000d0 <statusLed>
+
+	// 5. Katman
+	ldr r4, =[0x325]
+ 8000088:	4c23      	ldr	r4, [pc, #140]	; (8000118 <BNE+0x34>)
+	bl ledsOn
+ 800008a:	f000 f815 	bl	80000b8 <ledsOn>
+	bl statusLed
+ 800008e:	f000 f81f 	bl	80000d0 <statusLed>
+
+	// 7. Katman
+	ldr r4, =[0x337]
+ 8000092:	4c22      	ldr	r4, [pc, #136]	; (800011c <BNE+0x38>)
+	bl ledsOn
+ 8000094:	f000 f810 	bl	80000b8 <ledsOn>
+	bl statusLed
+ 8000098:	f000 f81a 	bl	80000d0 <statusLed>
+
+	// Reset Katmanı
+	ldr r4, =[0x000]
+ 800009c:	4c20      	ldr	r4, [pc, #128]	; (8000120 <BNE+0x3c>)
+	bl ledsOn
+ 800009e:	f000 f80b 	bl	80000b8 <ledsOn>
+	bl statusLed
+ 80000a2:	f000 f815 	bl	80000d0 <statusLed>
+
+	bl play
+ 80000a6:	f7ff ffe5 	bl	8000074 <play>
+
+080000aa <pause>:
+
+pause:
+	ldr r6, = GPIOB_ODR
+ 80000aa:	4e1e      	ldr	r6, [pc, #120]	; (8000124 <BNE+0x40>)
+	ldr r5, [r6] //ODR Value
+ 80000ac:	6835      	ldr	r5, [r6, #0]
+	movs r4, 0x8
+ 80000ae:	2408      	movs	r4, #8
+	orrs r5, r5, r4 //Setting led on
+ 80000b0:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80000b2:	6035      	str	r5, [r6, #0]
+
+	bl statusLed
+ 80000b4:	f000 f80c 	bl	80000d0 <statusLed>
+
+080000b8 <ledsOn>:
+
+	ledsOn:
+	ldr r6, =GPIOB_ODR
+ 80000b8:	4e1a      	ldr	r6, [pc, #104]	; (8000124 <BNE+0x40>)
+	ldr r5, [r6]
+ 80000ba:	6835      	ldr	r5, [r6, #0]
+	cmp r4,0x0
+ 80000bc:	2c00      	cmp	r4, #0
+	beq Reset
+ 80000be:	d000      	beq.n	80000c2 <Reset>
+	bne On
+ 80000c0:	d100      	bne.n	80000c4 <On>
+
+080000c2 <Reset>:
+	Reset:
+	ands r5, r5, r4
+ 80000c2:	4025      	ands	r5, r4
+
+080000c4 <On>:
+	On:
+	orrs r5, r5, r4
+ 80000c4:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80000c6:	6035      	str	r5, [r6, #0]
+	// Assign value to register r1 to sub 1 per clock
+	ldr r1, =delayInterval
+ 80000c8:	4917      	ldr	r1, [pc, #92]	; (8000128 <BNE+0x44>)
+
+080000ca <delay>:
+	delay:
+	subs r1, r1, #1
+ 80000ca:	3901      	subs	r1, #1
+	bne delay
+ 80000cc:	d1fd      	bne.n	80000ca <delay>
+
+	bx lr
+ 80000ce:	4770      	bx	lr
+
+080000d0 <statusLed>:
+
+	statusLed:
+	ldr r6, = GPIOB_IDR
+ 80000d0:	4e16      	ldr	r6, [pc, #88]	; (800012c <BNE+0x48>)
+	ldr r5, [r6] //IDR Value
+ 80000d2:	6835      	ldr	r5, [r6, #0]
+	movs r4, #0x40
+ 80000d4:	2440      	movs	r4, #64	; 0x40
+	ands r5, r5, r4 //Getting the value of button pressed or not
+ 80000d6:	4025      	ands	r5, r4
+	lsrs r5, #6
+ 80000d8:	09ad      	lsrs	r5, r5, #6
+
+	cmp r5, #0x1 //Compare IDR Value with 1 bit
+ 80000da:	2d01      	cmp	r5, #1
+	bne BNE //If not equal
+ 80000dc:	d102      	bne.n	80000e4 <BNE>
+	beq BEQ //If equal
+ 80000de:	d0ff      	beq.n	80000e0 <BEQ>
+
+080000e0 <BEQ>:
+	ldr r5, [r6] //ODR Value
+	movs r4, 0x8
+	orrs r5, r5, r4 //Setting led on
+	str r5, [r6]
+	*/
+	bl pause
+ 80000e0:	f7ff ffe3 	bl	80000aa <pause>
+
+080000e4 <BNE>:
+	ldr r5, [r6] //ODR Value
+	movs r4, 0x8
+	bics r5, r5, r4 //Setting led off
+	str r5, [r6]
+	*/
+	bx lr
+ 80000e4:	4770      	bx	lr
+
+	// this should never get executed
+	nop
+ 80000e6:	46c0      	nop			; (mov r8, r8)
+	ldr r0, =_estack
+ 80000e8:	20002000 	.word	0x20002000
+	ldr r0, =_sdata
+ 80000ec:	20000000 	.word	0x20000000
+	ldr r1, =_edata
+ 80000f0:	20000000 	.word	0x20000000
+	ldr r2, =_sidata
+ 80000f4:	08000138 	.word	0x08000138
+	ldr r2, =_sbss
+ 80000f8:	20000000 	.word	0x20000000
+	ldr r4, =_ebss
+ 80000fc:	20000000 	.word	0x20000000
+	ldr r6, =RCC_IOPENR
+ 8000100:	40021034 	.word	0x40021034
+	ldr r6, =GPIOB_MODER
+ 8000104:	50000400 	.word	0x50000400
+	ldr r5, =[0xFFFFF]
+ 8000108:	000fffff 	.word	0x000fffff
+	ldr r4, =[0x5C555]
+ 800010c:	0005c555 	.word	0x0005c555
+	ldr r4, =[0x100]
+ 8000110:	00000100 	.word	0x00000100
+	ldr r4, =[0x304]
+ 8000114:	00000304 	.word	0x00000304
+	ldr r4, =[0x325]
+ 8000118:	00000325 	.word	0x00000325
+	ldr r4, =[0x337]
+ 800011c:	00000337 	.word	0x00000337
+	ldr r4, =[0x000]
+ 8000120:	00000000 	.word	0x00000000
+	ldr r6, = GPIOB_ODR
+ 8000124:	50000414 	.word	0x50000414
+	ldr r1, =delayInterval
+ 8000128:	0030c008 	.word	0x0030c008
+	ldr r6, = GPIOB_IDR
+ 800012c:	50000410 	.word	0x50000410
+
+Disassembly of section .init:
+
+08000130 <_init>:
+ 8000130:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000132:	46c0      	nop			; (mov r8, r8)
+
+Disassembly of section .fini:
+
+08000134 <_fini>:
+ 8000134:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000136:	46c0      	nop			; (mov r8, r8)
