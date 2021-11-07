@@ -168,8 +168,8 @@ LOAD linker stubs
  .ARM.attributes
                 0x000000000000001e       0x22 ./Q1.o
 
-.debug_line     0x0000000000000000       0xab
- .debug_line    0x0000000000000000       0xab ./Q1.o
+.debug_line     0x0000000000000000       0xaa
+ .debug_line    0x0000000000000000       0xaa ./Q1.o
 
 .debug_info     0x0000000000000000       0x26
  .debug_info    0x0000000000000000       0x26 ./Q1.o

@@ -145,7 +145,7 @@ play:
 	bl ledsOn
 	bl statusLed
 
-	bl play
+	b play
 
 pause:
 	ldr r6, = GPIOB_ODR
@@ -154,7 +154,7 @@ pause:
 	orrs r5, r5, r4 //Setting led on
 	str r5, [r6]
 
-	bl statusLed
+	b statusLed
 
 	ledsOn:
 	ldr r6, =GPIOB_ODR
@@ -172,7 +172,6 @@ pause:
 	delay:
 	subs r1, r1, #1
 	bne delay
-
 	bx lr
 
 	statusLed:
@@ -188,25 +187,15 @@ pause:
 
 	//If is equal
 	BEQ:
-	/*
-	ldr r6, = GPIOB_ODR
-	ldr r5, [r6] //ODR Value
-	movs r4, 0x8
-	orrs r5, r5, r4 //Setting led on
-	str r5, [r6]
-	*/
-	bl pause
+	b pause
 
 	//If is not equal
 	BNE:
-	/*
-	ldr r6, = GPIOB_ODR
-	ldr r5, [r6] //ODR Value
-	movs r4, 0x8
-	bics r5, r5, r4 //Setting led off
+	ldr r6, =GPIOB_ODR
+	ldr r5, [r6]
+	ldr r5, =[0x0]
 	str r5, [r6]
-	*/
 	bx lr
 
 	// this should never get executed
-	nop
+	//nop
