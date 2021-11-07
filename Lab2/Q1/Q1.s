@@ -117,30 +117,30 @@ main:
 	ands r5, r5, r4
 	str r5, [r6]
 
-	bl statusLed
+	bl statusLed //Control the status switch
 
 play:
-	// 1. Katman
-	ldr r4, =[0x100]
+	//First Stage
+	ldr r4, =[0x100] //First leds connected to PB8
+	bl ledsOn //Turn leds on
+	bl statusLed //Control the status switch
+
+	//Third Stage
+	ldr r4, =[0x304] //Second and third leds connectod to PB2 and PB9
 	bl ledsOn
 	bl statusLed
 
-	// 3. Katman
-	ldr r4, =[0x304]
+	//Fifth Stage
+	ldr r4, =[0x325] //Fourth and Fifth leds connected to PB0 and PB5
 	bl ledsOn
 	bl statusLed
 
-	// 5. Katman
-	ldr r4, =[0x325]
+	//Seventh Stage
+	ldr r4, =[0x337] //Sixth and Seventh leds connected to PB1 and PB4
 	bl ledsOn
 	bl statusLed
 
-	// 7. Katman
-	ldr r4, =[0x337]
-	bl ledsOn
-	bl statusLed
-
-	// Reset Katmanı
+	//Reset Stage
 	ldr r4, =[0x000]
 	bl ledsOn
 	bl statusLed
@@ -150,7 +150,7 @@ play:
 pause:
 	ldr r6, = GPIOB_ODR
 	ldr r5, [r6] //ODR Value
-	movs r4, 0x8
+	movs r4, 0x8 //Status led connected to PB3
 	orrs r5, r5, r4 //Setting led on
 	str r5, [r6]
 
@@ -159,8 +159,8 @@ pause:
 	ledsOn:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	cmp r4,0x0
-	beq Reset
+	cmp r4,0x0 //Control the which led on at last
+	beq Reset //If all leds are on, then take all them off
 	bne On
 	Reset:
 	ands r5, r5, r4
@@ -177,9 +177,9 @@ pause:
 	statusLed:
 	ldr r6, = GPIOB_IDR
 	ldr r5, [r6] //IDR Value
-	movs r4, #0x40
+	movs r4, #0x40 //Status switch connected to PB6
 	ands r5, r5, r4 //Getting the value of button pressed or not
-	lsrs r5, #6
+	lsrs r5, #6 //Shifting to lsb for compare
 
 	cmp r5, #0x1 //Compare IDR Value with 1 bit
 	bne BNE //If not equal
@@ -191,6 +191,7 @@ pause:
 
 	//If is not equal
 	BNE:
+	//Status Led Off
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
 	ldr r5, =[0x0]
@@ -198,4 +199,4 @@ pause:
 	bx lr
 
 	// this should never get executed
-	//nop
+	nop
