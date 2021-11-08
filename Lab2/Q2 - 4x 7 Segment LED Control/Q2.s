@@ -114,9 +114,7 @@ main:
 	ldr r6, =GPIOA_MODER
 	ldr r5, [r6]
 	// cannot do with movs, so use pc relative
-	//ldr r5, =[0xFFFFFFFF]
-	//str r5, [r6]
-	ldr r4, =[0x7FD50000]
+	ldr r4, =[0x7FD50000] //All PA pins used define output
 	ands r5, r5, r4
 	str r5, [r6]
 
@@ -124,9 +122,7 @@ main:
 	ldr r6, =GPIOB_MODER
 	ldr r5, [r6]
 	// cannot do with movs, so use pc relative
-	//ldr r5, =[0xFFFFF]
-	//str r5, [r6]
-	ldr r4, =[0x55055]
+	ldr r4, =[0x55055] //PB5 pin define input, others used pins define output
 	ands r5, r5, r4
 	str r5, [r6]
 
@@ -137,26 +133,26 @@ main:
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	movs r3, [0x0]
-	movs r2, [0x0]
+	movs r3, [0x0] //Register used for define which pins set high
+	movs r2, [0x0] //Register used for understand which state is program
 
 	Loop:
 	ldr r6, = GPIOB_IDR
-	ldr r5, [r6] //IDR Value
-	ldr r7, [r6]
-	movs r4, #0x20 //Status switch connected to PB6
+	ldr r5, [r6] //For PB5, Pass Button
+	ldr r7, [r6] //For PB4, Countdown button
+	movs r4, #0x20 //Status switch connected to PB5
 	ands r5, r5, r4 //Getting the value of button pressed or not
 	lsrs r5, #5 //Shifting to lsb for compare
 	cmp r5, #0x1 //Compare IDR Value with 1 bit
 	beq changeNumber //If equal
-	movs r4, #0x10 //Status switch connected to PB6
+	movs r4, #0x10 //Status switch connected to PB4
 	ands r7, r7, r4 //Getting the value of button pressed or not
 	lsrs r7, #4 //Shifting to lsb for compare
 	cmp r7, #0x1 //Compare IDR Value with 1 bit
 	beq countdown //If equal
 
 	ldr r1, =delayInterval
-	Delay:
+	Delay: //Delay for program work slowly
 	subs r1, r1, #1
 	bne Delay
 
@@ -166,21 +162,21 @@ main:
 	countdown:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0x8]
+	ldr r4, =[0x8] //For set PB3 high, status led
 	orrs r5, r5, r4
 	str r5, [r6]
 	cmp r2, [0x1]
-	beq FirstCountdown
+	beq FirstCountdown //Countdown for first number
 	cmp r2, [0x2]
-	beq SecondCountdown
+	beq SecondCountdown //Countdown for second number
 	cmp r2, [0x0]
-	beq ThirdCountdown
+	beq ThirdCountdown //Countdown for third number
 	bne CCountinue
 
 	FirstCountdown:
-	movs r3, [0x0]
-	bl NumberSelect
-	ldr r1, =delayInterval
+	movs r3, [0x0] //Because of first number is 1, just display 0
+	bl NumberSelect //Display number sent
+	ldr r1, =delayInterval //Add delay for see transition
 	Delay1:
 	subs r1, r1, #1
 	bne Delay1
@@ -319,7 +315,7 @@ main:
 /*------------------------------------------*/
 
 	NumberSelect:
-	cmp r3, [0x0]
+	cmp r3, [0x0] //Control r3 for which number sent to NumberSelect
 	beq NumberZero
 	cmp r3, [0x1]
 	beq NumberOne
@@ -341,7 +337,7 @@ main:
 	beq NumberNine
 	bne NSCountinue
 
-	NumberZero:
+	NumberZero: //Display the number sent
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
 	ldr r4, =[0xFFD]

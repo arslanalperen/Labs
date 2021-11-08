@@ -118,7 +118,7 @@ main:
 
 	bl statusLed //Control the status switch
 
-play:
+	play:
 	//First Stage
 	ldr r4, =[0x100] //First leds connected to PB8
 	bl ledsOn //Turn leds on
@@ -146,7 +146,7 @@ play:
 
 	b play
 
-pause:
+	pause:
 	ldr r6, = GPIOB_ODR
 	ldr r5, [r6] //ODR Value
 	movs r4, 0x8 //Status led connected to PB3
