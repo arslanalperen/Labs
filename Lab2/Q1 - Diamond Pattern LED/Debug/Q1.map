@@ -181,5 +181,5 @@ LOAD linker stubs
  .debug_aranges
                 0x0000000000000000       0x20 ./Q1.o
 
-.debug_str      0x0000000000000000       0x3c
- .debug_str     0x0000000000000000       0x3c ./Q1.o
+.debug_str      0x0000000000000000       0x52
+ .debug_str     0x0000000000000000       0x52 ./Q1.o

@@ -1,5 +1,4 @@
  // Q1.s
- // Author     : Furkan Cayci
  // Arrangement: Alperen Arslan
 
 .syntax unified
@@ -24,7 +23,7 @@
 .equ GPIOB_BASE,       (0x50000400)          // GPIOB base address
 .equ GPIOB_MODER,      (GPIOB_BASE + (0x00)) // GPIOB MODER register offset
 .equ GPIOB_IDR,        (GPIOB_BASE + (0x10)) // GPIOB IDR register offset
-.equ GPIOB_ODR,        (GPIOB_BASE + (0x14)) // GPIOB IDR register offset
+.equ GPIOB_ODR,        (GPIOB_BASE + (0x14)) // GPIOB ODR register offset
 
 //Delay Interval
 .equ delayInterval, 2000000
@@ -107,7 +106,7 @@ main:
 	orrs r5, r5, r4
 	str r5, [r6]
 
-	// setup PB4 and PB5 for button and led 01 and 00 in MODER
+	// setup PB0, PB1, PB2...PB9 for 01 (Except PB7) and PB6 for 00 in MODER
 	ldr r6, =GPIOB_MODER
 	ldr r5, [r6]
 	// cannot do with movs, so use pc relative

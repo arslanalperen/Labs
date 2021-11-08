@@ -58,8 +58,8 @@ all: main-build
 main-build: Q1.elf secondary-outputs
 
 # Tool invocations
-Q1.elf: $(OBJS) $(USER_OBJS) D:\Microprocessors\Labs\Lab2\Q1\stm32.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Q1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"D:\Microprocessors\Labs\Lab2\Q1\stm32.ld" -Wl,-Map="Q1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Q1.elf: $(OBJS) $(USER_OBJS) D:\Microprocessors\Labs\Lab2\Q1\ -\ Diamond\ Pattern\ LED\stm32.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Q1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"D:\Microprocessors\Labs\Lab2\Q1 - Diamond Pattern LED\stm32.ld" -Wl,-Map="Q1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
