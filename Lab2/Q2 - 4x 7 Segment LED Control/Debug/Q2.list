@@ -3,27 +3,27 @@ Q2.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000314  08000000  08000000  00010000  2**2
+  0 .text         00000330  08000000  08000000  00010000  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .init         00000004  08000314  08000314  00010314  2**2
+  1 .init         00000004  08000330  08000330  00010330  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .fini         00000004  08000318  08000318  00010318  2**2
+  2 .fini         00000004  08000334  08000334  00010334  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  3 .data         00000000  20000000  20000000  0001031c  2**0
+  3 .data         00000000  20000000  20000000  00010338  2**0
                   CONTENTS, ALLOC, LOAD, DATA
   4 .bss          00000000  20000000  20000000  00000000  2**0
                   ALLOC
-  5 .ARM.attributes 00000028  00000000  00000000  0001031c  2**0
+  5 .ARM.attributes 00000028  00000000  00000000  00010338  2**0
                   CONTENTS, READONLY
-  6 .debug_line   000001a3  00000000  00000000  00010344  2**0
+  6 .debug_line   000001ad  00000000  00000000  00010360  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-  7 .debug_info   00000026  00000000  00000000  000104e7  2**0
+  7 .debug_info   00000026  00000000  00000000  0001050d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-  8 .debug_abbrev 00000014  00000000  00000000  0001050d  2**0
+  8 .debug_abbrev 00000014  00000000  00000000  00010533  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-  9 .debug_aranges 00000020  00000000  00000000  00010528  2**3
+  9 .debug_aranges 00000020  00000000  00000000  00010548  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 10 .debug_str    00000057  00000000  00000000  00010548  2**0
+ 10 .debug_str    00000057  00000000  00000000  00010568  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -45,7 +45,7 @@ Disassembly of section .text:
 Reset_Handler:
 	// set stack pointer
 	ldr r0, =_estack
- 8000020:	48a1      	ldr	r0, [pc, #644]	; (80002a8 <NSCountinue+0x4>)
+ 8000020:	48a6      	ldr	r0, [pc, #664]	; (80002bc <NSCountinue+0x4>)
 	mov sp, r0
  8000022:	4685      	mov	sp, r0
 
@@ -68,11 +68,11 @@ init_data:
 
 	// copy rom to ram
 	ldr r0, =_sdata
- 800002e:	489f      	ldr	r0, [pc, #636]	; (80002ac <NSCountinue+0x8>)
+ 800002e:	48a4      	ldr	r0, [pc, #656]	; (80002c0 <NSCountinue+0x8>)
 	ldr r1, =_edata
- 8000030:	499f      	ldr	r1, [pc, #636]	; (80002b0 <NSCountinue+0xc>)
+ 8000030:	49a4      	ldr	r1, [pc, #656]	; (80002c4 <NSCountinue+0xc>)
 	ldr r2, =_sidata
- 8000032:	4aa0      	ldr	r2, [pc, #640]	; (80002b4 <NSCountinue+0x10>)
+ 8000032:	4aa5      	ldr	r2, [pc, #660]	; (80002c8 <NSCountinue+0x10>)
 	movs r3, #0
  8000034:	2300      	movs	r3, #0
 	b LoopCopyDataInit
@@ -100,9 +100,9 @@ init_data:
 
 	// zero bss
 	ldr r2, =_sbss
- 8000044:	4a9c      	ldr	r2, [pc, #624]	; (80002b8 <NSCountinue+0x14>)
+ 8000044:	4aa1      	ldr	r2, [pc, #644]	; (80002cc <NSCountinue+0x14>)
 	ldr r4, =_ebss
- 8000046:	4c9d      	ldr	r4, [pc, #628]	; (80002bc <NSCountinue+0x18>)
+ 8000046:	4ca2      	ldr	r4, [pc, #648]	; (80002d0 <NSCountinue+0x18>)
 	movs r3, #0
  8000048:	2300      	movs	r3, #0
 	b LoopFillZerobss
@@ -142,7 +142,7 @@ Default_Handler:
 main:
 	// enable GPIOB clock, bit1 on IOPENR
 	ldr r6, =RCC_IOPENR
- 8000058:	4e99      	ldr	r6, [pc, #612]	; (80002c0 <NSCountinue+0x1c>)
+ 8000058:	4e9e      	ldr	r6, [pc, #632]	; (80002d4 <NSCountinue+0x1c>)
 	ldr r5, [r6]
  800005a:	6835      	ldr	r5, [r6, #0]
 	// movs expects imm8, so this should be fine
@@ -155,14 +155,14 @@ main:
 
 	// setup PA8, PA9, PA10 and PA15 for 01 in MODER
 	ldr r6, =GPIOA_MODER
- 8000062:	4e98      	ldr	r6, [pc, #608]	; (80002c4 <NSCountinue+0x20>)
+ 8000062:	4e9d      	ldr	r6, [pc, #628]	; (80002d8 <NSCountinue+0x20>)
 	ldr r5, [r6]
  8000064:	6835      	ldr	r5, [r6, #0]
 	// cannot do with movs, so use pc relative
 	//ldr r5, =[0xFFFFFFFF]
 	//str r5, [r6]
 	ldr r4, =[0x7FD50000]
- 8000066:	4c98      	ldr	r4, [pc, #608]	; (80002c8 <NSCountinue+0x24>)
+ 8000066:	4c9d      	ldr	r4, [pc, #628]	; (80002dc <NSCountinue+0x24>)
 	ands r5, r5, r4
  8000068:	4025      	ands	r5, r4
 	str r5, [r6]
@@ -170,14 +170,14 @@ main:
 
 	// setup PB0, PB1, PB2 ....PB9 for 01 and PB5 for 00 in MODER
 	ldr r6, =GPIOB_MODER
- 800006c:	4e97      	ldr	r6, [pc, #604]	; (80002cc <NSCountinue+0x28>)
+ 800006c:	4e9c      	ldr	r6, [pc, #624]	; (80002e0 <NSCountinue+0x28>)
 	ldr r5, [r6]
  800006e:	6835      	ldr	r5, [r6, #0]
 	// cannot do with movs, so use pc relative
 	//ldr r5, =[0xFFFFF]
 	//str r5, [r6]
 	ldr r4, =[0x55055]
- 8000070:	4c97      	ldr	r4, [pc, #604]	; (80002d0 <NSCountinue+0x2c>)
+ 8000070:	4c9c      	ldr	r4, [pc, #624]	; (80002e4 <NSCountinue+0x2c>)
 	ands r5, r5, r4
  8000072:	4025      	ands	r5, r4
 	str r5, [r6]
@@ -185,11 +185,11 @@ main:
 
 	//D1 Active
 	ldr r6, =GPIOA_ODR
- 8000076:	4e97      	ldr	r6, [pc, #604]	; (80002d4 <NSCountinue+0x30>)
+ 8000076:	4e9c      	ldr	r6, [pc, #624]	; (80002e8 <NSCountinue+0x30>)
 	ldr r5, [r6]
  8000078:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x0700]
- 800007a:	4c97      	ldr	r4, [pc, #604]	; (80002d8 <NSCountinue+0x34>)
+ 800007a:	4c9c      	ldr	r4, [pc, #624]	; (80002ec <NSCountinue+0x34>)
 	orrs r5, r5, r4
  800007c:	4325      	orrs	r5, r4
 	str r5, [r6]
@@ -204,7 +204,7 @@ main:
 
 	Loop:
 	ldr r6, = GPIOB_IDR
- 8000084:	4e95      	ldr	r6, [pc, #596]	; (80002dc <NSCountinue+0x38>)
+ 8000084:	4e9a      	ldr	r6, [pc, #616]	; (80002f0 <NSCountinue+0x38>)
 	ldr r5, [r6] //IDR Value
  8000086:	6835      	ldr	r5, [r6, #0]
 	ldr r7, [r6]
@@ -218,7 +218,7 @@ main:
 	cmp r5, #0x1 //Compare IDR Value with 1 bit
  8000090:	2d01      	cmp	r5, #1
 	beq changeNumber //If equal
- 8000092:	d06d      	beq.n	8000170 <changeNumber>
+ 8000092:	d077      	beq.n	8000184 <changeNumber>
 	movs r4, #0x10 //Status switch connected to PB6
  8000094:	2410      	movs	r4, #16
 	ands r7, r7, r4 //Getting the value of button pressed or not
@@ -231,7 +231,7 @@ main:
  800009c:	d003      	beq.n	80000a6 <countdown>
 
 	ldr r1, =delayInterval
- 800009e:	4990      	ldr	r1, [pc, #576]	; (80002e0 <NSCountinue+0x3c>)
+ 800009e:	4995      	ldr	r1, [pc, #596]	; (80002f4 <NSCountinue+0x3c>)
 
 080000a0 <Delay>:
 	Delay:
@@ -247,685 +247,708 @@ main:
 
 /*---------------------------------*/
 	countdown:
+	ldr r6, =GPIOB_ODR
+ 80000a6:	4e94      	ldr	r6, [pc, #592]	; (80002f8 <NSCountinue+0x40>)
+	ldr r5, [r6]
+ 80000a8:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x8]
+ 80000aa:	4c94      	ldr	r4, [pc, #592]	; (80002fc <NSCountinue+0x44>)
+	orrs r5, r5, r4
+ 80000ac:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80000ae:	6035      	str	r5, [r6, #0]
 	cmp r2, [0x1]
- 80000a6:	2a01      	cmp	r2, #1
+ 80000b0:	2a01      	cmp	r2, #1
 	beq FirstCountdown
- 80000a8:	d004      	beq.n	80000b4 <FirstCountdown>
+ 80000b2:	d004      	beq.n	80000be <FirstCountdown>
 	cmp r2, [0x2]
- 80000aa:	2a02      	cmp	r2, #2
+ 80000b4:	2a02      	cmp	r2, #2
 	beq SecondCountdown
- 80000ac:	d009      	beq.n	80000c2 <SecondCountdown>
+ 80000b6:	d009      	beq.n	80000cc <SecondCountdown>
 	cmp r2, [0x0]
- 80000ae:	2a00      	cmp	r2, #0
+ 80000b8:	2a00      	cmp	r2, #0
 	beq ThirdCountdown
- 80000b0:	d026      	beq.n	8000100 <ThirdCountdown>
+ 80000ba:	d026      	beq.n	800010a <ThirdCountdown>
 	bne CCountinue
- 80000b2:	d15c      	bne.n	800016e <CCountinue>
+ 80000bc:	d15c      	bne.n	8000178 <CCountinue>
 
-080000b4 <FirstCountdown>:
+080000be <FirstCountdown>:
 
 	FirstCountdown:
 	movs r3, [0x0]
- 80000b4:	2300      	movs	r3, #0
+ 80000be:	2300      	movs	r3, #0
 	bl NumberSelect
- 80000b6:	f000 f872 	bl	800019e <NumberSelect>
+ 80000c0:	f000 f877 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 80000ba:	4989      	ldr	r1, [pc, #548]	; (80002e0 <NSCountinue+0x3c>)
+ 80000c4:	498b      	ldr	r1, [pc, #556]	; (80002f4 <NSCountinue+0x3c>)
 
-080000bc <Delay1>:
+080000c6 <Delay1>:
 	Delay1:
 	subs r1, r1, #1
- 80000bc:	3901      	subs	r1, #1
+ 80000c6:	3901      	subs	r1, #1
 	bne Delay1
- 80000be:	d1fd      	bne.n	80000bc <Delay1>
+ 80000c8:	d1fd      	bne.n	80000c6 <Delay1>
 	b CCountinue
- 80000c0:	e055      	b.n	800016e <CCountinue>
+ 80000ca:	e055      	b.n	8000178 <CCountinue>
 
-080000c2 <SecondCountdown>:
+080000cc <SecondCountdown>:
 
 	SecondCountdown:
 	movs r3, [0x4]
- 80000c2:	2304      	movs	r3, #4
+ 80000cc:	2304      	movs	r3, #4
 	bl NumberSelect
- 80000c4:	f000 f86b 	bl	800019e <NumberSelect>
+ 80000ce:	f000 f870 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 80000c8:	4985      	ldr	r1, [pc, #532]	; (80002e0 <NSCountinue+0x3c>)
+ 80000d2:	4988      	ldr	r1, [pc, #544]	; (80002f4 <NSCountinue+0x3c>)
 
-080000ca <Delay2>:
+080000d4 <Delay2>:
 	Delay2:
 	subs r1, r1, #1
- 80000ca:	3901      	subs	r1, #1
+ 80000d4:	3901      	subs	r1, #1
 	bne Delay2
- 80000cc:	d1fd      	bne.n	80000ca <Delay2>
+ 80000d6:	d1fd      	bne.n	80000d4 <Delay2>
 	movs r3, [0x3]
- 80000ce:	2303      	movs	r3, #3
+ 80000d8:	2303      	movs	r3, #3
 	bl NumberSelect
- 80000d0:	f000 f865 	bl	800019e <NumberSelect>
+ 80000da:	f000 f86a 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 80000d4:	4982      	ldr	r1, [pc, #520]	; (80002e0 <NSCountinue+0x3c>)
+ 80000de:	4985      	ldr	r1, [pc, #532]	; (80002f4 <NSCountinue+0x3c>)
 
-080000d6 <Delay3>:
+080000e0 <Delay3>:
 	Delay3:
 	subs r1, r1, #1
- 80000d6:	3901      	subs	r1, #1
+ 80000e0:	3901      	subs	r1, #1
 	bne Delay3
- 80000d8:	d1fd      	bne.n	80000d6 <Delay3>
+ 80000e2:	d1fd      	bne.n	80000e0 <Delay3>
 	movs r3, [0x2]
- 80000da:	2302      	movs	r3, #2
+ 80000e4:	2302      	movs	r3, #2
 	bl NumberSelect
- 80000dc:	f000 f85f 	bl	800019e <NumberSelect>
+ 80000e6:	f000 f864 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 80000e0:	497f      	ldr	r1, [pc, #508]	; (80002e0 <NSCountinue+0x3c>)
+ 80000ea:	4982      	ldr	r1, [pc, #520]	; (80002f4 <NSCountinue+0x3c>)
 
-080000e2 <Delay4>:
+080000ec <Delay4>:
 	Delay4:
 	subs r1, r1, #1
- 80000e2:	3901      	subs	r1, #1
+ 80000ec:	3901      	subs	r1, #1
 	bne Delay4
- 80000e4:	d1fd      	bne.n	80000e2 <Delay4>
+ 80000ee:	d1fd      	bne.n	80000ec <Delay4>
 	movs r3, [0x1]
- 80000e6:	2301      	movs	r3, #1
+ 80000f0:	2301      	movs	r3, #1
 	bl NumberSelect
- 80000e8:	f000 f859 	bl	800019e <NumberSelect>
+ 80000f2:	f000 f85e 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 80000ec:	497c      	ldr	r1, [pc, #496]	; (80002e0 <NSCountinue+0x3c>)
+ 80000f6:	497f      	ldr	r1, [pc, #508]	; (80002f4 <NSCountinue+0x3c>)
 
-080000ee <Delay5>:
+080000f8 <Delay5>:
 	Delay5:
 	subs r1, r1, #1
- 80000ee:	3901      	subs	r1, #1
+ 80000f8:	3901      	subs	r1, #1
 	bne Delay5
- 80000f0:	d1fd      	bne.n	80000ee <Delay5>
+ 80000fa:	d1fd      	bne.n	80000f8 <Delay5>
 	movs r3, [0x0]
- 80000f2:	2300      	movs	r3, #0
+ 80000fc:	2300      	movs	r3, #0
 	bl NumberSelect
- 80000f4:	f000 f853 	bl	800019e <NumberSelect>
+ 80000fe:	f000 f858 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 80000f8:	4979      	ldr	r1, [pc, #484]	; (80002e0 <NSCountinue+0x3c>)
+ 8000102:	497c      	ldr	r1, [pc, #496]	; (80002f4 <NSCountinue+0x3c>)
 
-080000fa <Delay6>:
+08000104 <Delay6>:
 	Delay6:
 	subs r1, r1, #1
- 80000fa:	3901      	subs	r1, #1
+ 8000104:	3901      	subs	r1, #1
 	bne Delay6
- 80000fc:	d1fd      	bne.n	80000fa <Delay6>
+ 8000106:	d1fd      	bne.n	8000104 <Delay6>
 	b CCountinue
- 80000fe:	e036      	b.n	800016e <CCountinue>
+ 8000108:	e036      	b.n	8000178 <CCountinue>
 
-08000100 <ThirdCountdown>:
+0800010a <ThirdCountdown>:
 
 	ThirdCountdown:
 	movs r3, [0x8]
- 8000100:	2308      	movs	r3, #8
+ 800010a:	2308      	movs	r3, #8
 	bl NumberSelect
- 8000102:	f000 f84c 	bl	800019e <NumberSelect>
+ 800010c:	f000 f851 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 8000106:	4976      	ldr	r1, [pc, #472]	; (80002e0 <NSCountinue+0x3c>)
+ 8000110:	4978      	ldr	r1, [pc, #480]	; (80002f4 <NSCountinue+0x3c>)
 
-08000108 <Delay7>:
+08000112 <Delay7>:
 	Delay7:
 	subs r1, r1, #1
- 8000108:	3901      	subs	r1, #1
+ 8000112:	3901      	subs	r1, #1
 	bne Delay7
- 800010a:	d1fd      	bne.n	8000108 <Delay7>
+ 8000114:	d1fd      	bne.n	8000112 <Delay7>
 	movs r3, [0x7]
- 800010c:	2307      	movs	r3, #7
+ 8000116:	2307      	movs	r3, #7
 	bl NumberSelect
- 800010e:	f000 f846 	bl	800019e <NumberSelect>
+ 8000118:	f000 f84b 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 8000112:	4973      	ldr	r1, [pc, #460]	; (80002e0 <NSCountinue+0x3c>)
+ 800011c:	4975      	ldr	r1, [pc, #468]	; (80002f4 <NSCountinue+0x3c>)
 
-08000114 <Delay8>:
+0800011e <Delay8>:
 	Delay8:
 	subs r1, r1, #1
- 8000114:	3901      	subs	r1, #1
+ 800011e:	3901      	subs	r1, #1
 	bne Delay8
- 8000116:	d1fd      	bne.n	8000114 <Delay8>
+ 8000120:	d1fd      	bne.n	800011e <Delay8>
 	movs r3, [0x6]
- 8000118:	2306      	movs	r3, #6
+ 8000122:	2306      	movs	r3, #6
 	bl NumberSelect
- 800011a:	f000 f840 	bl	800019e <NumberSelect>
+ 8000124:	f000 f845 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 800011e:	4970      	ldr	r1, [pc, #448]	; (80002e0 <NSCountinue+0x3c>)
+ 8000128:	4972      	ldr	r1, [pc, #456]	; (80002f4 <NSCountinue+0x3c>)
 
-08000120 <Delay9>:
+0800012a <Delay9>:
 	Delay9:
 	subs r1, r1, #1
- 8000120:	3901      	subs	r1, #1
+ 800012a:	3901      	subs	r1, #1
 	bne Delay9
- 8000122:	d1fd      	bne.n	8000120 <Delay9>
+ 800012c:	d1fd      	bne.n	800012a <Delay9>
 	movs r3, [0x5]
- 8000124:	2305      	movs	r3, #5
+ 800012e:	2305      	movs	r3, #5
 	bl NumberSelect
- 8000126:	f000 f83a 	bl	800019e <NumberSelect>
+ 8000130:	f000 f83f 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 800012a:	496d      	ldr	r1, [pc, #436]	; (80002e0 <NSCountinue+0x3c>)
+ 8000134:	496f      	ldr	r1, [pc, #444]	; (80002f4 <NSCountinue+0x3c>)
 
-0800012c <Delay10>:
+08000136 <Delay10>:
 	Delay10:
 	subs r1, r1, #1
- 800012c:	3901      	subs	r1, #1
+ 8000136:	3901      	subs	r1, #1
 	bne Delay10
- 800012e:	d1fd      	bne.n	800012c <Delay10>
+ 8000138:	d1fd      	bne.n	8000136 <Delay10>
 	movs r3, [0x4]
- 8000130:	2304      	movs	r3, #4
+ 800013a:	2304      	movs	r3, #4
 	bl NumberSelect
- 8000132:	f000 f834 	bl	800019e <NumberSelect>
+ 800013c:	f000 f839 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 8000136:	496a      	ldr	r1, [pc, #424]	; (80002e0 <NSCountinue+0x3c>)
+ 8000140:	496c      	ldr	r1, [pc, #432]	; (80002f4 <NSCountinue+0x3c>)
 
-08000138 <Delay11>:
+08000142 <Delay11>:
 	Delay11:
 	subs r1, r1, #1
- 8000138:	3901      	subs	r1, #1
+ 8000142:	3901      	subs	r1, #1
 	bne Delay11
- 800013a:	d1fd      	bne.n	8000138 <Delay11>
+ 8000144:	d1fd      	bne.n	8000142 <Delay11>
 	movs r3, [0x3]
- 800013c:	2303      	movs	r3, #3
+ 8000146:	2303      	movs	r3, #3
 	bl NumberSelect
- 800013e:	f000 f82e 	bl	800019e <NumberSelect>
+ 8000148:	f000 f833 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 8000142:	4967      	ldr	r1, [pc, #412]	; (80002e0 <NSCountinue+0x3c>)
+ 800014c:	4969      	ldr	r1, [pc, #420]	; (80002f4 <NSCountinue+0x3c>)
 
-08000144 <Delay12>:
+0800014e <Delay12>:
 	Delay12:
 	subs r1, r1, #1
- 8000144:	3901      	subs	r1, #1
+ 800014e:	3901      	subs	r1, #1
 	bne Delay12
- 8000146:	d1fd      	bne.n	8000144 <Delay12>
+ 8000150:	d1fd      	bne.n	800014e <Delay12>
 	movs r3, [0x2]
- 8000148:	2302      	movs	r3, #2
+ 8000152:	2302      	movs	r3, #2
 	bl NumberSelect
- 800014a:	f000 f828 	bl	800019e <NumberSelect>
+ 8000154:	f000 f82d 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 800014e:	4964      	ldr	r1, [pc, #400]	; (80002e0 <NSCountinue+0x3c>)
+ 8000158:	4966      	ldr	r1, [pc, #408]	; (80002f4 <NSCountinue+0x3c>)
 
-08000150 <Delay13>:
+0800015a <Delay13>:
 	Delay13:
 	subs r1, r1, #1
- 8000150:	3901      	subs	r1, #1
+ 800015a:	3901      	subs	r1, #1
 	bne Delay13
- 8000152:	d1fd      	bne.n	8000150 <Delay13>
+ 800015c:	d1fd      	bne.n	800015a <Delay13>
 	movs r3, [0x1]
- 8000154:	2301      	movs	r3, #1
+ 800015e:	2301      	movs	r3, #1
 	bl NumberSelect
- 8000156:	f000 f822 	bl	800019e <NumberSelect>
+ 8000160:	f000 f827 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 800015a:	4961      	ldr	r1, [pc, #388]	; (80002e0 <NSCountinue+0x3c>)
+ 8000164:	4963      	ldr	r1, [pc, #396]	; (80002f4 <NSCountinue+0x3c>)
 
-0800015c <Delay14>:
+08000166 <Delay14>:
 	Delay14:
 	subs r1, r1, #1
- 800015c:	3901      	subs	r1, #1
+ 8000166:	3901      	subs	r1, #1
 	bne Delay14
- 800015e:	d1fd      	bne.n	800015c <Delay14>
+ 8000168:	d1fd      	bne.n	8000166 <Delay14>
 	movs r3, [0x0]
- 8000160:	2300      	movs	r3, #0
+ 800016a:	2300      	movs	r3, #0
 	bl NumberSelect
- 8000162:	f000 f81c 	bl	800019e <NumberSelect>
+ 800016c:	f000 f821 	bl	80001b2 <NumberSelect>
 	ldr r1, =delayInterval
- 8000166:	495e      	ldr	r1, [pc, #376]	; (80002e0 <NSCountinue+0x3c>)
+ 8000170:	4960      	ldr	r1, [pc, #384]	; (80002f4 <NSCountinue+0x3c>)
 
-08000168 <Delay15>:
+08000172 <Delay15>:
 	Delay15:
 	subs r1, r1, #1
- 8000168:	3901      	subs	r1, #1
+ 8000172:	3901      	subs	r1, #1
 	bne Delay15
- 800016a:	d1fd      	bne.n	8000168 <Delay15>
+ 8000174:	d1fd      	bne.n	8000172 <Delay15>
 	b CCountinue
- 800016c:	e7ff      	b.n	800016e <CCountinue>
+ 8000176:	e7ff      	b.n	8000178 <CCountinue>
 
-0800016e <CCountinue>:
+08000178 <CCountinue>:
 
 	CCountinue:
+	ldr r6, =GPIOB_ODR
+ 8000178:	4e5f      	ldr	r6, [pc, #380]	; (80002f8 <NSCountinue+0x40>)
+	ldr r5, [r6]
+ 800017a:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x8]
+ 800017c:	4c5f      	ldr	r4, [pc, #380]	; (80002fc <NSCountinue+0x44>)
+	bics r5, r5, r4
+ 800017e:	43a5      	bics	r5, r4
+	str r5, [r6]
+ 8000180:	6035      	str	r5, [r6, #0]
 	b Loop
- 800016e:	e789      	b.n	8000084 <Loop>
+ 8000182:	e77f      	b.n	8000084 <Loop>
 
-08000170 <changeNumber>:
+08000184 <changeNumber>:
 
 /*----------------------------------*/
 
 	changeNumber:
 	cmp r2, [0x0]
- 8000170:	2a00      	cmp	r2, #0
+ 8000184:	2a00      	cmp	r2, #0
 	beq FirstNumber
- 8000172:	d004      	beq.n	800017e <FirstNumber>
+ 8000186:	d004      	beq.n	8000192 <FirstNumber>
 	cmp r2, [0x1]
- 8000174:	2a01      	cmp	r2, #1
+ 8000188:	2a01      	cmp	r2, #1
 	beq SecondNumber
- 8000176:	d007      	beq.n	8000188 <SecondNumber>
+ 800018a:	d007      	beq.n	800019c <SecondNumber>
 	cmp r2, [0x2]
- 8000178:	2a02      	cmp	r2, #2
+ 800018c:	2a02      	cmp	r2, #2
 	beq ThirdNumber
- 800017a:	d00a      	beq.n	8000192 <ThirdNumber>
+ 800018e:	d00a      	beq.n	80001a6 <ThirdNumber>
 	bne CNCountinue
- 800017c:	d10e      	bne.n	800019c <CNCountinue>
+ 8000190:	d10e      	bne.n	80001b0 <CNCountinue>
 
-0800017e <FirstNumber>:
+08000192 <FirstNumber>:
 
 	FirstNumber:
 	movs r3, [0x1]
- 800017e:	2301      	movs	r3, #1
+ 8000192:	2301      	movs	r3, #1
 	bl NumberSelect
- 8000180:	f000 f80d 	bl	800019e <NumberSelect>
+ 8000194:	f000 f80d 	bl	80001b2 <NumberSelect>
 	movs r2, [0x1]
- 8000184:	2201      	movs	r2, #1
+ 8000198:	2201      	movs	r2, #1
 	b CNCountinue
- 8000186:	e009      	b.n	800019c <CNCountinue>
+ 800019a:	e009      	b.n	80001b0 <CNCountinue>
 
-08000188 <SecondNumber>:
+0800019c <SecondNumber>:
 
 	SecondNumber:
 	movs r3, [0x5]
- 8000188:	2305      	movs	r3, #5
+ 800019c:	2305      	movs	r3, #5
 	bl NumberSelect
- 800018a:	f000 f808 	bl	800019e <NumberSelect>
+ 800019e:	f000 f808 	bl	80001b2 <NumberSelect>
 	movs r2, [0x2]
- 800018e:	2202      	movs	r2, #2
+ 80001a2:	2202      	movs	r2, #2
 	b CNCountinue
- 8000190:	e004      	b.n	800019c <CNCountinue>
+ 80001a4:	e004      	b.n	80001b0 <CNCountinue>
 
-08000192 <ThirdNumber>:
+080001a6 <ThirdNumber>:
 
 	ThirdNumber:
 	movs r3, [0x9]
- 8000192:	2309      	movs	r3, #9
+ 80001a6:	2309      	movs	r3, #9
 	bl NumberSelect
- 8000194:	f000 f803 	bl	800019e <NumberSelect>
+ 80001a8:	f000 f803 	bl	80001b2 <NumberSelect>
 	movs r2, [0x0]
- 8000198:	2200      	movs	r2, #0
+ 80001ac:	2200      	movs	r2, #0
 	b CNCountinue
- 800019a:	e7ff      	b.n	800019c <CNCountinue>
+ 80001ae:	e7ff      	b.n	80001b0 <CNCountinue>
 
-0800019c <CNCountinue>:
+080001b0 <CNCountinue>:
 
 	CNCountinue:
 	b Loop
- 800019c:	e772      	b.n	8000084 <Loop>
+ 80001b0:	e768      	b.n	8000084 <Loop>
 
-0800019e <NumberSelect>:
+080001b2 <NumberSelect>:
 
 /*------------------------------------------*/
 
 	NumberSelect:
 	cmp r3, [0x0]
- 800019e:	2b00      	cmp	r3, #0
+ 80001b2:	2b00      	cmp	r3, #0
 	beq NumberZero
- 80001a0:	d012      	beq.n	80001c8 <NumberZero>
+ 80001b4:	d012      	beq.n	80001dc <NumberZero>
 	cmp r3, [0x1]
- 80001a2:	2b01      	cmp	r3, #1
+ 80001b6:	2b01      	cmp	r3, #1
 	beq NumberOne
- 80001a4:	d01b      	beq.n	80001de <NumberOne>
+ 80001b8:	d01b      	beq.n	80001f2 <NumberOne>
 	cmp r3, [0x2]
- 80001a6:	2b02      	cmp	r3, #2
+ 80001ba:	2b02      	cmp	r3, #2
 	beq NumberTwo
- 80001a8:	d024      	beq.n	80001f4 <NumberTwo>
+ 80001bc:	d024      	beq.n	8000208 <NumberTwo>
 	cmp r3, [0x3]
- 80001aa:	2b03      	cmp	r3, #3
+ 80001be:	2b03      	cmp	r3, #3
 	beq NumberThree
- 80001ac:	d02d      	beq.n	800020a <NumberThree>
+ 80001c0:	d02d      	beq.n	800021e <NumberThree>
 	cmp r3, [0x4]
- 80001ae:	2b04      	cmp	r3, #4
+ 80001c2:	2b04      	cmp	r3, #4
 	beq NumberFour
- 80001b0:	d036      	beq.n	8000220 <NumberFour>
+ 80001c4:	d036      	beq.n	8000234 <NumberFour>
 	cmp r3, [0x5]
- 80001b2:	2b05      	cmp	r3, #5
+ 80001c6:	2b05      	cmp	r3, #5
 	beq NumberFive
- 80001b4:	d03f      	beq.n	8000236 <NumberFive>
+ 80001c8:	d03f      	beq.n	800024a <NumberFive>
 	cmp r3, [0x6]
- 80001b6:	2b06      	cmp	r3, #6
+ 80001ca:	2b06      	cmp	r3, #6
 	beq NumberSix
- 80001b8:	d048      	beq.n	800024c <NumberSix>
+ 80001cc:	d048      	beq.n	8000260 <NumberSix>
 	cmp r3, [0x7]
- 80001ba:	2b07      	cmp	r3, #7
+ 80001ce:	2b07      	cmp	r3, #7
 	beq NumberSeven
- 80001bc:	d051      	beq.n	8000262 <NumberSeven>
+ 80001d0:	d051      	beq.n	8000276 <NumberSeven>
 	cmp r3, [0x8]
- 80001be:	2b08      	cmp	r3, #8
+ 80001d2:	2b08      	cmp	r3, #8
 	beq NumberEight
- 80001c0:	d05a      	beq.n	8000278 <NumberEight>
+ 80001d4:	d05a      	beq.n	800028c <NumberEight>
 	cmp r3, [0x9]
- 80001c2:	2b09      	cmp	r3, #9
+ 80001d6:	2b09      	cmp	r3, #9
 	beq NumberNine
- 80001c4:	d063      	beq.n	800028e <NumberNine>
+ 80001d8:	d063      	beq.n	80002a2 <NumberNine>
 	bne NSCountinue
- 80001c6:	d16d      	bne.n	80002a4 <NSCountinue>
+ 80001da:	d16d      	bne.n	80002b8 <NSCountinue>
 
-080001c8 <NumberZero>:
+080001dc <NumberZero>:
 
 	NumberZero:
 	ldr r6, =GPIOB_ODR
- 80001c8:	4e46      	ldr	r6, [pc, #280]	; (80002e4 <NSCountinue+0x40>)
+ 80001dc:	4e46      	ldr	r6, [pc, #280]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 80001ca:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 80001cc:	4c46      	ldr	r4, [pc, #280]	; (80002e8 <NSCountinue+0x44>)
+ 80001de:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFFD]
+ 80001e0:	4c47      	ldr	r4, [pc, #284]	; (8000300 <NSCountinue+0x48>)
 	bics r5, r5, r4
- 80001ce:	43a5      	bics	r5, r4
+ 80001e2:	43a5      	bics	r5, r4
 	str r5, [r6]
- 80001d0:	6035      	str	r5, [r6, #0]
+ 80001e4:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 80001d2:	4e44      	ldr	r6, [pc, #272]	; (80002e4 <NSCountinue+0x40>)
+ 80001e6:	4e44      	ldr	r6, [pc, #272]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 80001d4:	6835      	ldr	r5, [r6, #0]
+ 80001e8:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x1C7]
- 80001d6:	4c45      	ldr	r4, [pc, #276]	; (80002ec <NSCountinue+0x48>)
+ 80001ea:	4c46      	ldr	r4, [pc, #280]	; (8000304 <NSCountinue+0x4c>)
 	orrs r5, r5, r4
- 80001d8:	4325      	orrs	r5, r4
+ 80001ec:	4325      	orrs	r5, r4
 	str r5, [r6]
- 80001da:	6035      	str	r5, [r6, #0]
+ 80001ee:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 80001dc:	e062      	b.n	80002a4 <NSCountinue>
+ 80001f0:	e062      	b.n	80002b8 <NSCountinue>
 
-080001de <NumberOne>:
+080001f2 <NumberOne>:
 
 	NumberOne:
 	ldr r6, =GPIOB_ODR
- 80001de:	4e41      	ldr	r6, [pc, #260]	; (80002e4 <NSCountinue+0x40>)
+ 80001f2:	4e41      	ldr	r6, [pc, #260]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 80001e0:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 80001e2:	4c41      	ldr	r4, [pc, #260]	; (80002e8 <NSCountinue+0x44>)
+ 80001f4:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 80001f6:	4c44      	ldr	r4, [pc, #272]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 80001e4:	43a5      	bics	r5, r4
+ 80001f8:	43a5      	bics	r5, r4
 	str r5, [r6]
- 80001e6:	6035      	str	r5, [r6, #0]
+ 80001fa:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 80001e8:	4e3e      	ldr	r6, [pc, #248]	; (80002e4 <NSCountinue+0x40>)
+ 80001fc:	4e3e      	ldr	r6, [pc, #248]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 80001ea:	6835      	ldr	r5, [r6, #0]
+ 80001fe:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x42]
- 80001ec:	4c40      	ldr	r4, [pc, #256]	; (80002f0 <NSCountinue+0x4c>)
+ 8000200:	4c42      	ldr	r4, [pc, #264]	; (800030c <NSCountinue+0x54>)
 	orrs r5, r5, r4
- 80001ee:	4325      	orrs	r5, r4
+ 8000202:	4325      	orrs	r5, r4
 	str r5, [r6]
- 80001f0:	6035      	str	r5, [r6, #0]
+ 8000204:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 80001f2:	e057      	b.n	80002a4 <NSCountinue>
+ 8000206:	e057      	b.n	80002b8 <NSCountinue>
 
-080001f4 <NumberTwo>:
+08000208 <NumberTwo>:
 
 	NumberTwo:
 	ldr r6, =GPIOB_ODR
- 80001f4:	4e3b      	ldr	r6, [pc, #236]	; (80002e4 <NSCountinue+0x40>)
+ 8000208:	4e3b      	ldr	r6, [pc, #236]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 80001f6:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 80001f8:	4c3b      	ldr	r4, [pc, #236]	; (80002e8 <NSCountinue+0x44>)
+ 800020a:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 800020c:	4c3e      	ldr	r4, [pc, #248]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 80001fa:	43a5      	bics	r5, r4
+ 800020e:	43a5      	bics	r5, r4
 	str r5, [r6]
- 80001fc:	6035      	str	r5, [r6, #0]
+ 8000210:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 80001fe:	4e39      	ldr	r6, [pc, #228]	; (80002e4 <NSCountinue+0x40>)
+ 8000212:	4e39      	ldr	r6, [pc, #228]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000200:	6835      	ldr	r5, [r6, #0]
+ 8000214:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x2C5]
- 8000202:	4c3c      	ldr	r4, [pc, #240]	; (80002f4 <NSCountinue+0x50>)
+ 8000216:	4c3e      	ldr	r4, [pc, #248]	; (8000310 <NSCountinue+0x58>)
 	orrs r5, r5, r4
- 8000204:	4325      	orrs	r5, r4
+ 8000218:	4325      	orrs	r5, r4
 	str r5, [r6]
- 8000206:	6035      	str	r5, [r6, #0]
+ 800021a:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 8000208:	e04c      	b.n	80002a4 <NSCountinue>
+ 800021c:	e04c      	b.n	80002b8 <NSCountinue>
 
-0800020a <NumberThree>:
+0800021e <NumberThree>:
 
 	NumberThree:
 	ldr r6, =GPIOB_ODR
- 800020a:	4e36      	ldr	r6, [pc, #216]	; (80002e4 <NSCountinue+0x40>)
+ 800021e:	4e36      	ldr	r6, [pc, #216]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 800020c:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 800020e:	4c36      	ldr	r4, [pc, #216]	; (80002e8 <NSCountinue+0x44>)
+ 8000220:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 8000222:	4c39      	ldr	r4, [pc, #228]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 8000210:	43a5      	bics	r5, r4
+ 8000224:	43a5      	bics	r5, r4
 	str r5, [r6]
- 8000212:	6035      	str	r5, [r6, #0]
+ 8000226:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 8000214:	4e33      	ldr	r6, [pc, #204]	; (80002e4 <NSCountinue+0x40>)
+ 8000228:	4e33      	ldr	r6, [pc, #204]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000216:	6835      	ldr	r5, [r6, #0]
+ 800022a:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x2C3]
- 8000218:	4c37      	ldr	r4, [pc, #220]	; (80002f8 <NSCountinue+0x54>)
+ 800022c:	4c39      	ldr	r4, [pc, #228]	; (8000314 <NSCountinue+0x5c>)
 	orrs r5, r5, r4
- 800021a:	4325      	orrs	r5, r4
+ 800022e:	4325      	orrs	r5, r4
 	str r5, [r6]
- 800021c:	6035      	str	r5, [r6, #0]
+ 8000230:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 800021e:	e041      	b.n	80002a4 <NSCountinue>
+ 8000232:	e041      	b.n	80002b8 <NSCountinue>
 
-08000220 <NumberFour>:
+08000234 <NumberFour>:
 
 	NumberFour:
 	ldr r6, =GPIOB_ODR
- 8000220:	4e30      	ldr	r6, [pc, #192]	; (80002e4 <NSCountinue+0x40>)
+ 8000234:	4e30      	ldr	r6, [pc, #192]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000222:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 8000224:	4c30      	ldr	r4, [pc, #192]	; (80002e8 <NSCountinue+0x44>)
+ 8000236:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 8000238:	4c33      	ldr	r4, [pc, #204]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 8000226:	43a5      	bics	r5, r4
+ 800023a:	43a5      	bics	r5, r4
 	str r5, [r6]
- 8000228:	6035      	str	r5, [r6, #0]
+ 800023c:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 800022a:	4e2e      	ldr	r6, [pc, #184]	; (80002e4 <NSCountinue+0x40>)
+ 800023e:	4e2e      	ldr	r6, [pc, #184]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 800022c:	6835      	ldr	r5, [r6, #0]
+ 8000240:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x342]
- 800022e:	4c33      	ldr	r4, [pc, #204]	; (80002fc <NSCountinue+0x58>)
+ 8000242:	4c35      	ldr	r4, [pc, #212]	; (8000318 <NSCountinue+0x60>)
 	orrs r5, r5, r4
- 8000230:	4325      	orrs	r5, r4
+ 8000244:	4325      	orrs	r5, r4
 	str r5, [r6]
- 8000232:	6035      	str	r5, [r6, #0]
+ 8000246:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 8000234:	e036      	b.n	80002a4 <NSCountinue>
+ 8000248:	e036      	b.n	80002b8 <NSCountinue>
 
-08000236 <NumberFive>:
+0800024a <NumberFive>:
 
 	NumberFive:
 	ldr r6, =GPIOB_ODR
- 8000236:	4e2b      	ldr	r6, [pc, #172]	; (80002e4 <NSCountinue+0x40>)
+ 800024a:	4e2b      	ldr	r6, [pc, #172]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000238:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 800023a:	4c2b      	ldr	r4, [pc, #172]	; (80002e8 <NSCountinue+0x44>)
+ 800024c:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 800024e:	4c2e      	ldr	r4, [pc, #184]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 800023c:	43a5      	bics	r5, r4
+ 8000250:	43a5      	bics	r5, r4
 	str r5, [r6]
- 800023e:	6035      	str	r5, [r6, #0]
+ 8000252:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 8000240:	4e28      	ldr	r6, [pc, #160]	; (80002e4 <NSCountinue+0x40>)
+ 8000254:	4e28      	ldr	r6, [pc, #160]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000242:	6835      	ldr	r5, [r6, #0]
+ 8000256:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x383]
- 8000244:	4c2e      	ldr	r4, [pc, #184]	; (8000300 <NSCountinue+0x5c>)
+ 8000258:	4c30      	ldr	r4, [pc, #192]	; (800031c <NSCountinue+0x64>)
 	orrs r5, r5, r4
- 8000246:	4325      	orrs	r5, r4
+ 800025a:	4325      	orrs	r5, r4
 	str r5, [r6]
- 8000248:	6035      	str	r5, [r6, #0]
+ 800025c:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 800024a:	e02b      	b.n	80002a4 <NSCountinue>
+ 800025e:	e02b      	b.n	80002b8 <NSCountinue>
 
-0800024c <NumberSix>:
+08000260 <NumberSix>:
 
 	NumberSix:
 	ldr r6, =GPIOB_ODR
- 800024c:	4e25      	ldr	r6, [pc, #148]	; (80002e4 <NSCountinue+0x40>)
+ 8000260:	4e25      	ldr	r6, [pc, #148]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 800024e:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 8000250:	4c25      	ldr	r4, [pc, #148]	; (80002e8 <NSCountinue+0x44>)
+ 8000262:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 8000264:	4c28      	ldr	r4, [pc, #160]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 8000252:	43a5      	bics	r5, r4
+ 8000266:	43a5      	bics	r5, r4
 	str r5, [r6]
- 8000254:	6035      	str	r5, [r6, #0]
+ 8000268:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 8000256:	4e23      	ldr	r6, [pc, #140]	; (80002e4 <NSCountinue+0x40>)
+ 800026a:	4e23      	ldr	r6, [pc, #140]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000258:	6835      	ldr	r5, [r6, #0]
+ 800026c:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x387]
- 800025a:	4c2a      	ldr	r4, [pc, #168]	; (8000304 <NSCountinue+0x60>)
+ 800026e:	4c2c      	ldr	r4, [pc, #176]	; (8000320 <NSCountinue+0x68>)
 	orrs r5, r5, r4
- 800025c:	4325      	orrs	r5, r4
+ 8000270:	4325      	orrs	r5, r4
 	str r5, [r6]
- 800025e:	6035      	str	r5, [r6, #0]
+ 8000272:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 8000260:	e020      	b.n	80002a4 <NSCountinue>
+ 8000274:	e020      	b.n	80002b8 <NSCountinue>
 
-08000262 <NumberSeven>:
+08000276 <NumberSeven>:
 
 	NumberSeven:
 	ldr r6, =GPIOB_ODR
- 8000262:	4e20      	ldr	r6, [pc, #128]	; (80002e4 <NSCountinue+0x40>)
+ 8000276:	4e20      	ldr	r6, [pc, #128]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000264:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 8000266:	4c20      	ldr	r4, [pc, #128]	; (80002e8 <NSCountinue+0x44>)
+ 8000278:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 800027a:	4c23      	ldr	r4, [pc, #140]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 8000268:	43a5      	bics	r5, r4
+ 800027c:	43a5      	bics	r5, r4
 	str r5, [r6]
- 800026a:	6035      	str	r5, [r6, #0]
+ 800027e:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 800026c:	4e1d      	ldr	r6, [pc, #116]	; (80002e4 <NSCountinue+0x40>)
+ 8000280:	4e1d      	ldr	r6, [pc, #116]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 800026e:	6835      	ldr	r5, [r6, #0]
+ 8000282:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0xC2]
- 8000270:	4c25      	ldr	r4, [pc, #148]	; (8000308 <NSCountinue+0x64>)
+ 8000284:	4c27      	ldr	r4, [pc, #156]	; (8000324 <NSCountinue+0x6c>)
 	orrs r5, r5, r4
- 8000272:	4325      	orrs	r5, r4
+ 8000286:	4325      	orrs	r5, r4
 	str r5, [r6]
- 8000274:	6035      	str	r5, [r6, #0]
+ 8000288:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 8000276:	e015      	b.n	80002a4 <NSCountinue>
+ 800028a:	e015      	b.n	80002b8 <NSCountinue>
 
-08000278 <NumberEight>:
+0800028c <NumberEight>:
 
 	NumberEight:
 	ldr r6, =GPIOB_ODR
- 8000278:	4e1a      	ldr	r6, [pc, #104]	; (80002e4 <NSCountinue+0x40>)
+ 800028c:	4e1a      	ldr	r6, [pc, #104]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 800027a:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 800027c:	4c1a      	ldr	r4, [pc, #104]	; (80002e8 <NSCountinue+0x44>)
+ 800028e:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 8000290:	4c1d      	ldr	r4, [pc, #116]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 800027e:	43a5      	bics	r5, r4
+ 8000292:	43a5      	bics	r5, r4
 	str r5, [r6]
- 8000280:	6035      	str	r5, [r6, #0]
+ 8000294:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 8000282:	4e18      	ldr	r6, [pc, #96]	; (80002e4 <NSCountinue+0x40>)
+ 8000296:	4e18      	ldr	r6, [pc, #96]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000284:	6835      	ldr	r5, [r6, #0]
+ 8000298:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x3C7]
- 8000286:	4c21      	ldr	r4, [pc, #132]	; (800030c <NSCountinue+0x68>)
+ 800029a:	4c23      	ldr	r4, [pc, #140]	; (8000328 <NSCountinue+0x70>)
 	orrs r5, r5, r4
- 8000288:	4325      	orrs	r5, r4
+ 800029c:	4325      	orrs	r5, r4
 	str r5, [r6]
- 800028a:	6035      	str	r5, [r6, #0]
+ 800029e:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 800028c:	e00a      	b.n	80002a4 <NSCountinue>
+ 80002a0:	e00a      	b.n	80002b8 <NSCountinue>
 
-0800028e <NumberNine>:
+080002a2 <NumberNine>:
 
 	NumberNine:
 	ldr r6, =GPIOB_ODR
- 800028e:	4e15      	ldr	r6, [pc, #84]	; (80002e4 <NSCountinue+0x40>)
+ 80002a2:	4e15      	ldr	r6, [pc, #84]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 8000290:	6835      	ldr	r5, [r6, #0]
-	ldr r4, =[0xFFF]
- 8000292:	4c15      	ldr	r4, [pc, #84]	; (80002e8 <NSCountinue+0x44>)
+ 80002a4:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 80002a6:	4c18      	ldr	r4, [pc, #96]	; (8000308 <NSCountinue+0x50>)
 	bics r5, r5, r4
- 8000294:	43a5      	bics	r5, r4
+ 80002a8:	43a5      	bics	r5, r4
 	str r5, [r6]
- 8000296:	6035      	str	r5, [r6, #0]
+ 80002aa:	6035      	str	r5, [r6, #0]
 	ldr r6, =GPIOB_ODR
- 8000298:	4e12      	ldr	r6, [pc, #72]	; (80002e4 <NSCountinue+0x40>)
+ 80002ac:	4e12      	ldr	r6, [pc, #72]	; (80002f8 <NSCountinue+0x40>)
 	ldr r5, [r6]
- 800029a:	6835      	ldr	r5, [r6, #0]
+ 80002ae:	6835      	ldr	r5, [r6, #0]
 	ldr r4, =[0x3C3]
- 800029c:	4c1c      	ldr	r4, [pc, #112]	; (8000310 <NSCountinue+0x6c>)
+ 80002b0:	4c1e      	ldr	r4, [pc, #120]	; (800032c <NSCountinue+0x74>)
 	orrs r5, r5, r4
- 800029e:	4325      	orrs	r5, r4
+ 80002b2:	4325      	orrs	r5, r4
 	str r5, [r6]
- 80002a0:	6035      	str	r5, [r6, #0]
+ 80002b4:	6035      	str	r5, [r6, #0]
 	b NSCountinue
- 80002a2:	e7ff      	b.n	80002a4 <NSCountinue>
+ 80002b6:	e7ff      	b.n	80002b8 <NSCountinue>
 
-080002a4 <NSCountinue>:
+080002b8 <NSCountinue>:
 
 	NSCountinue:
 	bx lr
- 80002a4:	4770      	bx	lr
-	str r5, [r6]
-	bx lr
-	*/
+ 80002b8:	4770      	bx	lr
+
+/*---------------------------------*/
 
 	// this should never get executed
 	nop
- 80002a6:	46c0      	nop			; (mov r8, r8)
+ 80002ba:	46c0      	nop			; (mov r8, r8)
 	ldr r0, =_estack
- 80002a8:	20002000 	.word	0x20002000
+ 80002bc:	20002000 	.word	0x20002000
 	ldr r0, =_sdata
- 80002ac:	20000000 	.word	0x20000000
+ 80002c0:	20000000 	.word	0x20000000
 	ldr r1, =_edata
- 80002b0:	20000000 	.word	0x20000000
+ 80002c4:	20000000 	.word	0x20000000
 	ldr r2, =_sidata
- 80002b4:	0800031c 	.word	0x0800031c
+ 80002c8:	08000338 	.word	0x08000338
 	ldr r2, =_sbss
- 80002b8:	20000000 	.word	0x20000000
+ 80002cc:	20000000 	.word	0x20000000
 	ldr r4, =_ebss
- 80002bc:	20000000 	.word	0x20000000
+ 80002d0:	20000000 	.word	0x20000000
 	ldr r6, =RCC_IOPENR
- 80002c0:	40021034 	.word	0x40021034
+ 80002d4:	40021034 	.word	0x40021034
 	ldr r6, =GPIOA_MODER
- 80002c4:	50000000 	.word	0x50000000
+ 80002d8:	50000000 	.word	0x50000000
 	ldr r4, =[0x7FD50000]
- 80002c8:	7fd50000 	.word	0x7fd50000
+ 80002dc:	7fd50000 	.word	0x7fd50000
 	ldr r6, =GPIOB_MODER
- 80002cc:	50000400 	.word	0x50000400
+ 80002e0:	50000400 	.word	0x50000400
 	ldr r4, =[0x55055]
- 80002d0:	00055055 	.word	0x00055055
+ 80002e4:	00055055 	.word	0x00055055
 	ldr r6, =GPIOA_ODR
- 80002d4:	50000014 	.word	0x50000014
+ 80002e8:	50000014 	.word	0x50000014
 	ldr r4, =[0x0700]
- 80002d8:	00000700 	.word	0x00000700
+ 80002ec:	00000700 	.word	0x00000700
 	ldr r6, = GPIOB_IDR
- 80002dc:	50000410 	.word	0x50000410
+ 80002f0:	50000410 	.word	0x50000410
 	ldr r1, =delayInterval
- 80002e0:	000f4240 	.word	0x000f4240
+ 80002f4:	000f4240 	.word	0x000f4240
 	ldr r6, =GPIOB_ODR
- 80002e4:	50000414 	.word	0x50000414
-	ldr r4, =[0xFFF]
- 80002e8:	00000fff 	.word	0x00000fff
+ 80002f8:	50000414 	.word	0x50000414
+	ldr r4, =[0x8]
+ 80002fc:	00000008 	.word	0x00000008
+	ldr r4, =[0xFFD]
+ 8000300:	00000ffd 	.word	0x00000ffd
 	ldr r4, =[0x1C7]
- 80002ec:	000001c7 	.word	0x000001c7
+ 8000304:	000001c7 	.word	0x000001c7
+	ldr r4, =[0xFF7]
+ 8000308:	00000ff7 	.word	0x00000ff7
 	ldr r4, =[0x42]
- 80002f0:	00000042 	.word	0x00000042
+ 800030c:	00000042 	.word	0x00000042
 	ldr r4, =[0x2C5]
- 80002f4:	000002c5 	.word	0x000002c5
+ 8000310:	000002c5 	.word	0x000002c5
 	ldr r4, =[0x2C3]
- 80002f8:	000002c3 	.word	0x000002c3
+ 8000314:	000002c3 	.word	0x000002c3
 	ldr r4, =[0x342]
- 80002fc:	00000342 	.word	0x00000342
+ 8000318:	00000342 	.word	0x00000342
 	ldr r4, =[0x383]
- 8000300:	00000383 	.word	0x00000383
+ 800031c:	00000383 	.word	0x00000383
 	ldr r4, =[0x387]
- 8000304:	00000387 	.word	0x00000387
+ 8000320:	00000387 	.word	0x00000387
 	ldr r4, =[0xC2]
- 8000308:	000000c2 	.word	0x000000c2
+ 8000324:	000000c2 	.word	0x000000c2
 	ldr r4, =[0x3C7]
- 800030c:	000003c7 	.word	0x000003c7
+ 8000328:	000003c7 	.word	0x000003c7
 	ldr r4, =[0x3C3]
- 8000310:	000003c3 	.word	0x000003c3
+ 800032c:	000003c3 	.word	0x000003c3
 
 Disassembly of section .init:
 
-08000314 <_init>:
- 8000314:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 8000316:	46c0      	nop			; (mov r8, r8)
+08000330 <_init>:
+ 8000330:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000332:	46c0      	nop			; (mov r8, r8)
 
 Disassembly of section .fini:
 
-08000318 <_fini>:
- 8000318:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 800031a:	46c0      	nop			; (mov r8, r8)
+08000334 <_fini>:
+ 8000334:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000336:	46c0      	nop			; (mov r8, r8)

@@ -164,6 +164,11 @@ main:
 
 /*---------------------------------*/
 	countdown:
+	ldr r6, =GPIOB_ODR
+	ldr r5, [r6]
+	ldr r4, =[0x8]
+	orrs r5, r5, r4
+	str r5, [r6]
 	cmp r2, [0x1]
 	beq FirstCountdown
 	cmp r2, [0x2]
@@ -272,6 +277,11 @@ main:
 	b CCountinue
 
 	CCountinue:
+	ldr r6, =GPIOB_ODR
+	ldr r5, [r6]
+	ldr r4, =[0x8]
+	bics r5, r5, r4
+	str r5, [r6]
 	b Loop
 
 /*----------------------------------*/
@@ -334,7 +344,7 @@ main:
 	NumberZero:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFFD]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -347,7 +357,7 @@ main:
 	NumberOne:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -360,7 +370,7 @@ main:
 	NumberTwo:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -373,7 +383,7 @@ main:
 	NumberThree:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -386,7 +396,7 @@ main:
 	NumberFour:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -399,7 +409,7 @@ main:
 	NumberFive:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -412,7 +422,7 @@ main:
 	NumberSix:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -425,7 +435,7 @@ main:
 	NumberSeven:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -438,7 +448,7 @@ main:
 	NumberEight:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
@@ -451,7 +461,7 @@ main:
 	NumberNine:
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0xFFF]
+	ldr r4, =[0xFF7]
 	bics r5, r5, r4
 	str r5, [r6]
 	ldr r6, =GPIOB_ODR
