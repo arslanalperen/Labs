@@ -30,7 +30,7 @@
 .equ GPIOA_ODR,        (GPIOA_BASE + (0x14)) // GPIOA ODR register offset
 
 //Delay Interval
-.equ delayInterval, 220000
+.equ delayInterval, 1000000
 
 // vector table, +1 thumb mode
 .section .vectors
@@ -143,18 +143,135 @@ main:
 	Loop:
 	ldr r6, = GPIOB_IDR
 	ldr r5, [r6] //IDR Value
+	ldr r7, [r6]
 	movs r4, #0x20 //Status switch connected to PB6
 	ands r5, r5, r4 //Getting the value of button pressed or not
 	lsrs r5, #5 //Shifting to lsb for compare
-
 	cmp r5, #0x1 //Compare IDR Value with 1 bit
 	beq changeNumber //If equal
+	movs r4, #0x10 //Status switch connected to PB6
+	ands r7, r7, r4 //Getting the value of button pressed or not
+	lsrs r7, #4 //Shifting to lsb for compare
+	cmp r7, #0x1 //Compare IDR Value with 1 bit
+	beq countdown //If equal
 
 	ldr r1, =delayInterval
 	Delay:
 	subs r1, r1, #1
 	bne Delay
 
+	b Loop
+
+/*---------------------------------*/
+	countdown:
+	cmp r2, [0x1]
+	beq FirstCountdown
+	cmp r2, [0x2]
+	beq SecondCountdown
+	cmp r2, [0x0]
+	beq ThirdCountdown
+	bne CCountinue
+
+	FirstCountdown:
+	movs r3, [0x0]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay1:
+	subs r1, r1, #1
+	bne Delay1
+	b CCountinue
+
+	SecondCountdown:
+	movs r3, [0x4]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay2:
+	subs r1, r1, #1
+	bne Delay2
+	movs r3, [0x3]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay3:
+	subs r1, r1, #1
+	bne Delay3
+	movs r3, [0x2]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay4:
+	subs r1, r1, #1
+	bne Delay4
+	movs r3, [0x1]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay5:
+	subs r1, r1, #1
+	bne Delay5
+	movs r3, [0x0]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay6:
+	subs r1, r1, #1
+	bne Delay6
+	b CCountinue
+
+	ThirdCountdown:
+	movs r3, [0x8]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay7:
+	subs r1, r1, #1
+	bne Delay7
+	movs r3, [0x7]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay8:
+	subs r1, r1, #1
+	bne Delay8
+	movs r3, [0x6]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay9:
+	subs r1, r1, #1
+	bne Delay9
+	movs r3, [0x5]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay10:
+	subs r1, r1, #1
+	bne Delay10
+	movs r3, [0x4]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay11:
+	subs r1, r1, #1
+	bne Delay11
+	movs r3, [0x3]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay12:
+	subs r1, r1, #1
+	bne Delay12
+	movs r3, [0x2]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay13:
+	subs r1, r1, #1
+	bne Delay13
+	movs r3, [0x1]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay14:
+	subs r1, r1, #1
+	bne Delay14
+	movs r3, [0x0]
+	bl NumberSelect
+	ldr r1, =delayInterval
+	Delay15:
+	subs r1, r1, #1
+	bne Delay15
+	b CCountinue
+
+	CCountinue:
 	b Loop
 
 /*----------------------------------*/
@@ -348,16 +465,6 @@ main:
 	bx lr
 
 /*---------------------------------*/
-
-	/*
-	DigitReset:
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
-	ldr r4, =[0x000]
-	bics r5, r5, r4
-	str r5, [r6]
-	bx lr
-	*/
 
 	// this should never get executed
 	nop

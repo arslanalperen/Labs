@@ -153,7 +153,7 @@ main:
 	str r5, [r6]
  8000060:	6035      	str	r5, [r6, #0]
 
-	// setup PB4 and PB5 for button and led 01 and 00 in MODER
+	// setup PB0, PB1, PB2...PB9 for 01 (Except PB7) and PB6 for 00 in MODER
 	ldr r6, =GPIOB_MODER
  8000062:	4e29      	ldr	r6, [pc, #164]	; (8000108 <BNE+0x2a>)
 	ldr r5, [r6]
