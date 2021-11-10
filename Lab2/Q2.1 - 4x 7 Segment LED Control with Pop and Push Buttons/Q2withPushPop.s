@@ -30,7 +30,7 @@
 .equ GPIOA_ODR,        (GPIOA_BASE + (0x14)) // GPIOA ODR register offset
 
 //Delay Interval
-.equ delayInterval, 2000000
+.equ delayInterval, 1600000
 
 // vector table, +1 thumb mode
 .section .vectors
@@ -143,7 +143,6 @@ main:
 	movs r4, #0x20 //Status switch connected to PB5
 	ands r5, r5, r4 //Getting the value of button pressed or not
 	lsrs r5, #5 //Shifting to lsb for compare
-	//push {lr}
 	cmp r5, #0x1 //Compare IDR Value with 1 bit
 	beq changeNumber //If equal
 	/*
@@ -152,49 +151,54 @@ main:
 	lsrs r7, #4 //Shifting to lsb for compare
 	cmp r7, #0x1 //Compare IDR Value with 1 bit
 	beq countdown //If equal
-	bl Delay
 	*/
 	b loop
 
 /*------------------------------------*/
 
 	changeNumber:
+	push {lr}
+	bl Delay
 	cmp r2, [0x0]
 	beq FirstNumber
 	cmp r2, [0x1]
 	beq SecondNumber
 	cmp r2, [0x2]
 	beq ThirdNumber
-	pop {pc}
+	b loop
 
 	FirstNumber:
 	movs r3, [0x1]
 	bl NumberSelect
 	movs r2, [0x1]
-	pop {pc}
+	b loop
 
 	SecondNumber:
 	movs r3, [0x5]
 	bl NumberSelect
 	movs r2, [0x2]
-	pop {pc}
+	b loop
 
 	ThirdNumber:
 	movs r3, [0x9]
 	bl NumberSelect
 	movs r2, [0x0]
-	pop {pc}
+	b loop
 
 /*---------------------------------------------------------*/
 
 	Delay: //Delay for program work slowly
+	ldr r1, =delayInterval
+	delay:
 	subs r1, r1, #1
-	bne Delay
+	bne delay
 	bx lr
 
 /*----------------------------------------------------------*/
 
 	NumberSelect:
+	push {lr}
+	bl ResetDigit
 	cmp r3, [0x0] //Control r3 for which number sent to NumberSelect
 	beq NumberZero
 	cmp r3, [0x1]
@@ -218,101 +222,55 @@ main:
 	bx lr
 
 	NumberZero: //Display the number sent
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x1C7]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberOne:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x42]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberTwo:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x2C5]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberThree:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x2C3]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberFour:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x342]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberFive:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x383]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberSix:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x387]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberSeven:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0xC2]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberEight:
-	push {lr}
-	bl ResetDigit
-	ldr r6, =GPIOB_ODR
-	ldr r5, [r6]
 	ldr r4, =[0x3C7]
-	orrs r5, r5, r4
-	str r5, [r6]
-	pop {pc}
+	b toLedsOn
 
 	NumberNine:
+	ldr r4, =[0x3C3]
+	b toLedsOn
+
+	toLedsOn:
+	bl LedsOn
+	pop {pc}
+
+/*-----------------------------------------*/
+
+	LedsOn:
 	push {lr}
-	bl ResetDigit
 	ldr r6, =GPIOB_ODR
 	ldr r5, [r6]
-	ldr r4, =[0x3C3]
 	orrs r5, r5, r4
 	str r5, [r6]
 	pop {pc}

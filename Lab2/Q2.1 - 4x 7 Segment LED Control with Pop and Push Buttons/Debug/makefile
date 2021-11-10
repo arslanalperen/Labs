@@ -58,8 +58,8 @@ all: main-build
 main-build: Q2withPopPush.elf secondary-outputs
 
 # Tool invocations
-Q2withPopPush.elf: $(OBJS) $(USER_OBJS) C:\ST\STM32CubeIDE_1.7.0\STM32CubeIDE\Projects\Q2withPopPush\STM32G031K8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Q2withPopPush.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\ST\STM32CubeIDE_1.7.0\STM32CubeIDE\Projects\Q2withPopPush\STM32G031K8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Q2withPopPush.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Q2withPopPush.elf: $(OBJS) $(USER_OBJS) D:\Microprocessors\Labs\Lab2\Q2.1\ -\ 4x\ 7\ Segment\ LED\ Control\ with\ Pop\ and\ Push\ Buttons\STM32G031K8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Q2withPopPush.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"D:\Microprocessors\Labs\Lab2\Q2.1 - 4x 7 Segment LED Control with Pop and Push Buttons\STM32G031K8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Q2withPopPush.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
