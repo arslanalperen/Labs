@@ -1,0 +1,675 @@
+
+Q2withPopPush.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000000  08000000  08000000  00010278  2**0
+                  CONTENTS
+  1 .text         00000270  08000000  08000000  00010000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  08000270  08000278  00010278  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  08000270  08000270  00010278  2**0
+                  CONTENTS
+  4 .ARM          00000000  08000270  08000270  00010278  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08000270  08000278  00010278  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08000270  08000270  00010270  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  08000274  08000274  00010274  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000000  20000000  20000000  00010278  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000001c  20000000  08000278  00020000  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000604  2000001c  08000278  0002001c  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000028  00000000  00000000  00010278  2**0
+                  CONTENTS, READONLY
+ 12 .debug_line   00000139  00000000  00000000  000102a0  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_info   00000026  00000000  00000000  000103d9  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_abbrev 00000014  00000000  00000000  000103ff  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_aranges 00000020  00000000  00000000  00010418  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_str    00000064  00000000  00000000  00010438  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000000 <__do_global_dtors_aux>:
+ 8000000:	b510      	push	{r4, lr}
+ 8000002:	4c06      	ldr	r4, [pc, #24]	; (800001c <__do_global_dtors_aux+0x1c>)
+ 8000004:	7823      	ldrb	r3, [r4, #0]
+ 8000006:	2b00      	cmp	r3, #0
+ 8000008:	d107      	bne.n	800001a <__do_global_dtors_aux+0x1a>
+ 800000a:	4b05      	ldr	r3, [pc, #20]	; (8000020 <__do_global_dtors_aux+0x20>)
+ 800000c:	2b00      	cmp	r3, #0
+ 800000e:	d002      	beq.n	8000016 <__do_global_dtors_aux+0x16>
+ 8000010:	4804      	ldr	r0, [pc, #16]	; (8000024 <__do_global_dtors_aux+0x24>)
+ 8000012:	e000      	b.n	8000016 <__do_global_dtors_aux+0x16>
+ 8000014:	bf00      	nop
+ 8000016:	2301      	movs	r3, #1
+ 8000018:	7023      	strb	r3, [r4, #0]
+ 800001a:	bd10      	pop	{r4, pc}
+ 800001c:	20000000 	.word	0x20000000
+ 8000020:	00000000 	.word	0x00000000
+ 8000024:	08000258 	.word	0x08000258
+
+08000028 <frame_dummy>:
+ 8000028:	4b04      	ldr	r3, [pc, #16]	; (800003c <frame_dummy+0x14>)
+ 800002a:	b510      	push	{r4, lr}
+ 800002c:	2b00      	cmp	r3, #0
+ 800002e:	d003      	beq.n	8000038 <frame_dummy+0x10>
+ 8000030:	4903      	ldr	r1, [pc, #12]	; (8000040 <frame_dummy+0x18>)
+ 8000032:	4804      	ldr	r0, [pc, #16]	; (8000044 <frame_dummy+0x1c>)
+ 8000034:	e000      	b.n	8000038 <frame_dummy+0x10>
+ 8000036:	bf00      	nop
+ 8000038:	bd10      	pop	{r4, pc}
+ 800003a:	46c0      	nop			; (mov r8, r8)
+ 800003c:	00000000 	.word	0x00000000
+ 8000040:	20000004 	.word	0x20000004
+ 8000044:	08000258 	.word	0x08000258
+ 8000048:	20000000 	.word	0x20000000
+ 800004c:	20000000 	.word	0x20000000
+ 8000050:	20000000 	.word	0x20000000
+ 8000054:	2000001c 	.word	0x2000001c
+
+08000058 <Reset_Handler>:
+
+// reset handler
+.section .text
+Reset_Handler:
+	// set stack pointer
+	ldr r0, =_estack
+ 8000058:	4865      	ldr	r0, [pc, #404]	; (80001f0 <ResetDigit+0x10>)
+	mov sp, r0
+ 800005a:	4685      	mov	sp, r0
+
+	// initialize data and bss
+	// not necessary for rom only code
+
+	bl init_data
+ 800005c:	f000 f803 	bl	8000066 <init_data>
+	// call main
+	bl main
+ 8000060:	f000 f816 	bl	8000090 <main>
+	// trap if returned
+	b .
+ 8000064:	e7fe      	b.n	8000064 <Reset_Handler+0xc>
+
+08000066 <init_data>:
+// initialize data and bss sections
+.section .text
+init_data:
+
+	// copy rom to ram
+	ldr r0, =_sdata
+ 8000066:	4863      	ldr	r0, [pc, #396]	; (80001f4 <ResetDigit+0x14>)
+	ldr r1, =_edata
+ 8000068:	4963      	ldr	r1, [pc, #396]	; (80001f8 <ResetDigit+0x18>)
+	ldr r2, =_sidata
+ 800006a:	4a64      	ldr	r2, [pc, #400]	; (80001fc <ResetDigit+0x1c>)
+	movs r3, #0
+ 800006c:	2300      	movs	r3, #0
+	b LoopCopyDataInit
+ 800006e:	e002      	b.n	8000076 <LoopCopyDataInit>
+
+08000070 <CopyDataInit>:
+
+	CopyDataInit:
+		ldr r4, [r2, r3]
+ 8000070:	58d4      	ldr	r4, [r2, r3]
+		str r4, [r0, r3]
+ 8000072:	50c4      	str	r4, [r0, r3]
+		adds r3, r3, #4
+ 8000074:	3304      	adds	r3, #4
+
+08000076 <LoopCopyDataInit>:
+
+	LoopCopyDataInit:
+		adds r4, r0, r3
+ 8000076:	18c4      	adds	r4, r0, r3
+		cmp r4, r1
+ 8000078:	428c      	cmp	r4, r1
+		bcc CopyDataInit
+ 800007a:	d3f9      	bcc.n	8000070 <CopyDataInit>
+
+	// zero bss
+	ldr r2, =_sbss
+ 800007c:	4a60      	ldr	r2, [pc, #384]	; (8000200 <ResetDigit+0x20>)
+	ldr r4, =_ebss
+ 800007e:	4c61      	ldr	r4, [pc, #388]	; (8000204 <ResetDigit+0x24>)
+	movs r3, #0
+ 8000080:	2300      	movs	r3, #0
+	b LoopFillZerobss
+ 8000082:	e001      	b.n	8000088 <LoopFillZerobss>
+
+08000084 <FillZerobss>:
+
+	FillZerobss:
+		str  r3, [r2]
+ 8000084:	6013      	str	r3, [r2, #0]
+		adds r2, r2, #4
+ 8000086:	3204      	adds	r2, #4
+
+08000088 <LoopFillZerobss>:
+
+	LoopFillZerobss:
+		cmp r2, r4
+ 8000088:	42a2      	cmp	r2, r4
+		bcc FillZerobss
+ 800008a:	d3fb      	bcc.n	8000084 <FillZerobss>
+
+	bx lr
+ 800008c:	4770      	bx	lr
+
+0800008e <Default_Handler>:
+
+// default handler
+.section .text
+Default_Handler:
+	b Default_Handler
+ 800008e:	e7fe      	b.n	800008e <Default_Handler>
+
+08000090 <main>:
+
+// main function
+.section .text
+main:
+	// enable GPIOB clock, bit1 on IOPENR
+	ldr r6, =RCC_IOPENR
+ 8000090:	4e5d      	ldr	r6, [pc, #372]	; (8000208 <ResetDigit+0x28>)
+	ldr r5, [r6]
+ 8000092:	6835      	ldr	r5, [r6, #0]
+	// movs expects imm8, so this should be fine
+	movs r4, 0x3
+ 8000094:	2403      	movs	r4, #3
+	orrs r5, r5, r4
+ 8000096:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 8000098:	6035      	str	r5, [r6, #0]
+
+	// setup PA8, PA9, PA10 and PA15 for 01 in MODER
+	ldr r6, =GPIOA_MODER
+ 800009a:	4e5c      	ldr	r6, [pc, #368]	; (800020c <ResetDigit+0x2c>)
+	ldr r5, [r6]
+ 800009c:	6835      	ldr	r5, [r6, #0]
+	// cannot do with movs, so use pc relative
+	ldr r4, =[0x7FD50000] //All PA pins used define output
+ 800009e:	4c5c      	ldr	r4, [pc, #368]	; (8000210 <ResetDigit+0x30>)
+	ands r5, r5, r4
+ 80000a0:	4025      	ands	r5, r4
+	str r5, [r6]
+ 80000a2:	6035      	str	r5, [r6, #0]
+
+	// setup PB0, PB1, PB2 ....PB9 for 01 and PB5 for 00 in MODER
+	ldr r6, =GPIOB_MODER
+ 80000a4:	4e5b      	ldr	r6, [pc, #364]	; (8000214 <ResetDigit+0x34>)
+	ldr r5, [r6]
+ 80000a6:	6835      	ldr	r5, [r6, #0]
+	// cannot do with movs, so use pc relative
+	ldr r4, =[0x55055] //PB5 pin define input, others used pins define output
+ 80000a8:	4c5b      	ldr	r4, [pc, #364]	; (8000218 <ResetDigit+0x38>)
+	ands r5, r5, r4
+ 80000aa:	4025      	ands	r5, r4
+	str r5, [r6]
+ 80000ac:	6035      	str	r5, [r6, #0]
+
+	//D1 Active
+	ldr r6, =GPIOA_ODR
+ 80000ae:	4e5b      	ldr	r6, [pc, #364]	; (800021c <ResetDigit+0x3c>)
+	ldr r5, [r6]
+ 80000b0:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x0700]
+ 80000b2:	4c5b      	ldr	r4, [pc, #364]	; (8000220 <ResetDigit+0x40>)
+	orrs r5, r5, r4
+ 80000b4:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80000b6:	6035      	str	r5, [r6, #0]
+
+	movs r2, [0x0]
+ 80000b8:	2200      	movs	r2, #0
+	movs r3, [0x0]
+ 80000ba:	2300      	movs	r3, #0
+
+080000bc <loop>:
+
+	loop:
+	ldr r6, = GPIOB_IDR
+ 80000bc:	4e59      	ldr	r6, [pc, #356]	; (8000224 <ResetDigit+0x44>)
+	ldr r5, [r6] //For PB5, Pass Button
+ 80000be:	6835      	ldr	r5, [r6, #0]
+	ldr r7, [r6] //For PB4, Countdown button
+ 80000c0:	6837      	ldr	r7, [r6, #0]
+	movs r4, #0x20 //Status switch connected to PB5
+ 80000c2:	2420      	movs	r4, #32
+	ands r5, r5, r4 //Getting the value of button pressed or not
+ 80000c4:	4025      	ands	r5, r4
+	lsrs r5, #5 //Shifting to lsb for compare
+ 80000c6:	096d      	lsrs	r5, r5, #5
+	push {lr}
+ 80000c8:	b500      	push	{lr}
+	cmp r5, #0x1 //Compare IDR Value with 1 bit
+ 80000ca:	2d01      	cmp	r5, #1
+	beq changeNumber //If equal
+ 80000cc:	d000      	beq.n	80000d0 <changeNumber>
+	lsrs r7, #4 //Shifting to lsb for compare
+	cmp r7, #0x1 //Compare IDR Value with 1 bit
+	beq countdown //If equal
+	bl Delay
+	*/
+	b loop
+ 80000ce:	e7f5      	b.n	80000bc <loop>
+
+080000d0 <changeNumber>:
+
+/*------------------------------------*/
+
+	changeNumber:
+	cmp r2, [0x0]
+ 80000d0:	2a00      	cmp	r2, #0
+	beq FirstNumber
+ 80000d2:	d004      	beq.n	80000de <FirstNumber>
+	cmp r2, [0x1]
+ 80000d4:	2a01      	cmp	r2, #1
+	beq SecondNumber
+ 80000d6:	d007      	beq.n	80000e8 <SecondNumber>
+	cmp r2, [0x2]
+ 80000d8:	2a02      	cmp	r2, #2
+	beq ThirdNumber
+ 80000da:	d00a      	beq.n	80000f2 <ThirdNumber>
+	pop {pc}
+ 80000dc:	bd00      	pop	{pc}
+
+080000de <FirstNumber>:
+
+	FirstNumber:
+	movs r3, [0x1]
+ 80000de:	2301      	movs	r3, #1
+	bl NumberSelect
+ 80000e0:	f000 f80f 	bl	8000102 <NumberSelect>
+	movs r2, [0x1]
+ 80000e4:	2201      	movs	r2, #1
+	pop {pc}
+ 80000e6:	bd00      	pop	{pc}
+
+080000e8 <SecondNumber>:
+
+	SecondNumber:
+	movs r3, [0x5]
+ 80000e8:	2305      	movs	r3, #5
+	bl NumberSelect
+ 80000ea:	f000 f80a 	bl	8000102 <NumberSelect>
+	movs r2, [0x2]
+ 80000ee:	2202      	movs	r2, #2
+	pop {pc}
+ 80000f0:	bd00      	pop	{pc}
+
+080000f2 <ThirdNumber>:
+
+	ThirdNumber:
+	movs r3, [0x9]
+ 80000f2:	2309      	movs	r3, #9
+	bl NumberSelect
+ 80000f4:	f000 f805 	bl	8000102 <NumberSelect>
+	movs r2, [0x0]
+ 80000f8:	2200      	movs	r2, #0
+	pop {pc}
+ 80000fa:	bd00      	pop	{pc}
+
+080000fc <Delay>:
+
+/*---------------------------------------------------------*/
+
+	Delay: //Delay for program work slowly
+	subs r1, r1, #1
+ 80000fc:	3901      	subs	r1, #1
+	bne Delay
+ 80000fe:	d1fd      	bne.n	80000fc <Delay>
+	bx lr
+ 8000100:	4770      	bx	lr
+
+08000102 <NumberSelect>:
+
+/*----------------------------------------------------------*/
+
+	NumberSelect:
+	cmp r3, [0x0] //Control r3 for which number sent to NumberSelect
+ 8000102:	2b00      	cmp	r3, #0
+	beq NumberZero
+ 8000104:	d012      	beq.n	800012c <NumberZero>
+	cmp r3, [0x1]
+ 8000106:	2b01      	cmp	r3, #1
+	beq NumberOne
+ 8000108:	d019      	beq.n	800013e <NumberOne>
+	cmp r3, [0x2]
+ 800010a:	2b02      	cmp	r3, #2
+	beq NumberTwo
+ 800010c:	d020      	beq.n	8000150 <NumberTwo>
+	cmp r3, [0x3]
+ 800010e:	2b03      	cmp	r3, #3
+	beq NumberThree
+ 8000110:	d027      	beq.n	8000162 <NumberThree>
+	cmp r3, [0x4]
+ 8000112:	2b04      	cmp	r3, #4
+	beq NumberFour
+ 8000114:	d02e      	beq.n	8000174 <NumberFour>
+	cmp r3, [0x5]
+ 8000116:	2b05      	cmp	r3, #5
+	beq NumberFive
+ 8000118:	d035      	beq.n	8000186 <NumberFive>
+	cmp r3, [0x6]
+ 800011a:	2b06      	cmp	r3, #6
+	beq NumberSix
+ 800011c:	d03c      	beq.n	8000198 <NumberSix>
+	cmp r3, [0x7]
+ 800011e:	2b07      	cmp	r3, #7
+	beq NumberSeven
+ 8000120:	d043      	beq.n	80001aa <NumberSeven>
+	cmp r3, [0x8]
+ 8000122:	2b08      	cmp	r3, #8
+	beq NumberEight
+ 8000124:	d04a      	beq.n	80001bc <NumberEight>
+	cmp r3, [0x9]
+ 8000126:	2b09      	cmp	r3, #9
+	beq NumberNine
+ 8000128:	d051      	beq.n	80001ce <NumberNine>
+	bx lr
+ 800012a:	4770      	bx	lr
+
+0800012c <NumberZero>:
+
+	NumberZero: //Display the number sent
+	push {lr}
+ 800012c:	b500      	push	{lr}
+	bl ResetDigit
+ 800012e:	f000 f857 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 8000132:	4e3d      	ldr	r6, [pc, #244]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 8000134:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x1C7]
+ 8000136:	4c3d      	ldr	r4, [pc, #244]	; (800022c <ResetDigit+0x4c>)
+	orrs r5, r5, r4
+ 8000138:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 800013a:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 800013c:	bd00      	pop	{pc}
+
+0800013e <NumberOne>:
+
+	NumberOne:
+	push {lr}
+ 800013e:	b500      	push	{lr}
+	bl ResetDigit
+ 8000140:	f000 f84e 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 8000144:	4e38      	ldr	r6, [pc, #224]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 8000146:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x42]
+ 8000148:	4c39      	ldr	r4, [pc, #228]	; (8000230 <ResetDigit+0x50>)
+	orrs r5, r5, r4
+ 800014a:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 800014c:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 800014e:	bd00      	pop	{pc}
+
+08000150 <NumberTwo>:
+
+	NumberTwo:
+	push {lr}
+ 8000150:	b500      	push	{lr}
+	bl ResetDigit
+ 8000152:	f000 f845 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 8000156:	4e34      	ldr	r6, [pc, #208]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 8000158:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x2C5]
+ 800015a:	4c36      	ldr	r4, [pc, #216]	; (8000234 <ResetDigit+0x54>)
+	orrs r5, r5, r4
+ 800015c:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 800015e:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 8000160:	bd00      	pop	{pc}
+
+08000162 <NumberThree>:
+
+	NumberThree:
+	push {lr}
+ 8000162:	b500      	push	{lr}
+	bl ResetDigit
+ 8000164:	f000 f83c 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 8000168:	4e2f      	ldr	r6, [pc, #188]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 800016a:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x2C3]
+ 800016c:	4c32      	ldr	r4, [pc, #200]	; (8000238 <ResetDigit+0x58>)
+	orrs r5, r5, r4
+ 800016e:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 8000170:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 8000172:	bd00      	pop	{pc}
+
+08000174 <NumberFour>:
+
+	NumberFour:
+	push {lr}
+ 8000174:	b500      	push	{lr}
+	bl ResetDigit
+ 8000176:	f000 f833 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 800017a:	4e2b      	ldr	r6, [pc, #172]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 800017c:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x342]
+ 800017e:	4c2f      	ldr	r4, [pc, #188]	; (800023c <ResetDigit+0x5c>)
+	orrs r5, r5, r4
+ 8000180:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 8000182:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 8000184:	bd00      	pop	{pc}
+
+08000186 <NumberFive>:
+
+	NumberFive:
+	push {lr}
+ 8000186:	b500      	push	{lr}
+	bl ResetDigit
+ 8000188:	f000 f82a 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 800018c:	4e26      	ldr	r6, [pc, #152]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 800018e:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x383]
+ 8000190:	4c2b      	ldr	r4, [pc, #172]	; (8000240 <ResetDigit+0x60>)
+	orrs r5, r5, r4
+ 8000192:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 8000194:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 8000196:	bd00      	pop	{pc}
+
+08000198 <NumberSix>:
+
+	NumberSix:
+	push {lr}
+ 8000198:	b500      	push	{lr}
+	bl ResetDigit
+ 800019a:	f000 f821 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 800019e:	4e22      	ldr	r6, [pc, #136]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 80001a0:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x387]
+ 80001a2:	4c28      	ldr	r4, [pc, #160]	; (8000244 <ResetDigit+0x64>)
+	orrs r5, r5, r4
+ 80001a4:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80001a6:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 80001a8:	bd00      	pop	{pc}
+
+080001aa <NumberSeven>:
+
+	NumberSeven:
+	push {lr}
+ 80001aa:	b500      	push	{lr}
+	bl ResetDigit
+ 80001ac:	f000 f818 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 80001b0:	4e1d      	ldr	r6, [pc, #116]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 80001b2:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xC2]
+ 80001b4:	4c24      	ldr	r4, [pc, #144]	; (8000248 <ResetDigit+0x68>)
+	orrs r5, r5, r4
+ 80001b6:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80001b8:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 80001ba:	bd00      	pop	{pc}
+
+080001bc <NumberEight>:
+
+	NumberEight:
+	push {lr}
+ 80001bc:	b500      	push	{lr}
+	bl ResetDigit
+ 80001be:	f000 f80f 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 80001c2:	4e19      	ldr	r6, [pc, #100]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 80001c4:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x3C7]
+ 80001c6:	4c21      	ldr	r4, [pc, #132]	; (800024c <ResetDigit+0x6c>)
+	orrs r5, r5, r4
+ 80001c8:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80001ca:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 80001cc:	bd00      	pop	{pc}
+
+080001ce <NumberNine>:
+
+	NumberNine:
+	push {lr}
+ 80001ce:	b500      	push	{lr}
+	bl ResetDigit
+ 80001d0:	f000 f806 	bl	80001e0 <ResetDigit>
+	ldr r6, =GPIOB_ODR
+ 80001d4:	4e14      	ldr	r6, [pc, #80]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 80001d6:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0x3C3]
+ 80001d8:	4c1d      	ldr	r4, [pc, #116]	; (8000250 <ResetDigit+0x70>)
+	orrs r5, r5, r4
+ 80001da:	4325      	orrs	r5, r4
+	str r5, [r6]
+ 80001dc:	6035      	str	r5, [r6, #0]
+	pop {pc}
+ 80001de:	bd00      	pop	{pc}
+
+080001e0 <ResetDigit>:
+
+/*-----------------------------------------*/
+
+	ResetDigit:
+	ldr r6, =GPIOB_ODR
+ 80001e0:	4e11      	ldr	r6, [pc, #68]	; (8000228 <ResetDigit+0x48>)
+	ldr r5, [r6]
+ 80001e2:	6835      	ldr	r5, [r6, #0]
+	ldr r4, =[0xFF7]
+ 80001e4:	4c1b      	ldr	r4, [pc, #108]	; (8000254 <ResetDigit+0x74>)
+	bics r5, r5, r4
+ 80001e6:	43a5      	bics	r5, r4
+	str r5, [r6]
+ 80001e8:	6035      	str	r5, [r6, #0]
+	bx lr
+ 80001ea:	4770      	bx	lr
+
+/*-----------------------------------------*/
+
+	// this should never get executed
+	nop
+ 80001ec:	46c0      	nop			; (mov r8, r8)
+ 80001ee:	0000      	.short	0x0000
+	ldr r0, =_estack
+ 80001f0:	20002000 	.word	0x20002000
+	ldr r0, =_sdata
+ 80001f4:	20000000 	.word	0x20000000
+	ldr r1, =_edata
+ 80001f8:	20000000 	.word	0x20000000
+	ldr r2, =_sidata
+ 80001fc:	08000278 	.word	0x08000278
+	ldr r2, =_sbss
+ 8000200:	20000000 	.word	0x20000000
+	ldr r4, =_ebss
+ 8000204:	2000001c 	.word	0x2000001c
+	ldr r6, =RCC_IOPENR
+ 8000208:	40021034 	.word	0x40021034
+	ldr r6, =GPIOA_MODER
+ 800020c:	50000000 	.word	0x50000000
+	ldr r4, =[0x7FD50000] //All PA pins used define output
+ 8000210:	7fd50000 	.word	0x7fd50000
+	ldr r6, =GPIOB_MODER
+ 8000214:	50000400 	.word	0x50000400
+	ldr r4, =[0x55055] //PB5 pin define input, others used pins define output
+ 8000218:	00055055 	.word	0x00055055
+	ldr r6, =GPIOA_ODR
+ 800021c:	50000014 	.word	0x50000014
+	ldr r4, =[0x0700]
+ 8000220:	00000700 	.word	0x00000700
+	ldr r6, = GPIOB_IDR
+ 8000224:	50000410 	.word	0x50000410
+	ldr r6, =GPIOB_ODR
+ 8000228:	50000414 	.word	0x50000414
+	ldr r4, =[0x1C7]
+ 800022c:	000001c7 	.word	0x000001c7
+	ldr r4, =[0x42]
+ 8000230:	00000042 	.word	0x00000042
+	ldr r4, =[0x2C5]
+ 8000234:	000002c5 	.word	0x000002c5
+	ldr r4, =[0x2C3]
+ 8000238:	000002c3 	.word	0x000002c3
+	ldr r4, =[0x342]
+ 800023c:	00000342 	.word	0x00000342
+	ldr r4, =[0x383]
+ 8000240:	00000383 	.word	0x00000383
+	ldr r4, =[0x387]
+ 8000244:	00000387 	.word	0x00000387
+	ldr r4, =[0xC2]
+ 8000248:	000000c2 	.word	0x000000c2
+	ldr r4, =[0x3C7]
+ 800024c:	000003c7 	.word	0x000003c7
+	ldr r4, =[0x3C3]
+ 8000250:	000003c3 	.word	0x000003c3
+	ldr r4, =[0xFF7]
+ 8000254:	00000ff7 	.word	0x00000ff7
+
+08000258 <_init>:
+ 8000258:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800025a:	46c0      	nop			; (mov r8, r8)
+ 800025c:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800025e:	bc08      	pop	{r3}
+ 8000260:	469e      	mov	lr, r3
+ 8000262:	4770      	bx	lr
+
+08000264 <_fini>:
+ 8000264:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000266:	46c0      	nop			; (mov r8, r8)
+ 8000268:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800026a:	bc08      	pop	{r3}
+ 800026c:	469e      	mov	lr, r3
+ 800026e:	4770      	bx	lr
