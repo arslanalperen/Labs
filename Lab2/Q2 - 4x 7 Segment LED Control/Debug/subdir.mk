@@ -5,13 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 S_SRCS += \
-../Q2.s 
+../Q2.s \
+../Q2withPopPush.s 
 
 OBJS += \
-./Q2.o 
+./Q2.o \
+./Q2withPopPush.o 
 
 S_DEPS += \
-./Q2.d 
+./Q2.d \
+./Q2withPopPush.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
