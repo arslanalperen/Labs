@@ -1,13 +1,8 @@
-/*
- * main.c
- *
- * author: Alperen Arslan
- *
- * description: Blinks 1 on-board LED at roughly 1 second intervals. system
- *   clock is running from HSI which is 16 Mhz. Delay function is just a simple
- *   counter so is not accurate and the delay time will change based on the
- *   optimization flags.
- */
+//main.c
+//
+//Author: Alperen Arslan
+//Description: Changes the mode of the LED by pressing the button.
+//At the same time, it shows which mode it is in with a 7-segment display.
 
 #include "stm32g0xx.h"
 
@@ -33,20 +28,20 @@ void display4Mode();
 void display5Mode();
 
 int main(void) {
-    /* Enable GPIOB clock */
-    RCC->IOPENR |= (1U << 1);
+    // Enable GPIOB clock
+	RCC->IOPENR |= (1U << 1);
 
-    /* Setup PA9, PA10, PA15, PB0, PB1, PB4, PB6, PB7  as output and PB5 as input */
+    //Setup PA9, PA10, PA15, PB0, PB1, PB4, PB6, PB7  as output and PB5 as input
     GPIOB->MODER &= 0xFFFC5555;
 
     while(1){
-    int value = GPIOB->IDR &= (1U << 8);
+    int value = GPIOB->IDR &= (1U << 8); //Getting button value
     if (value == 0x100){
     	switch(counter){
     		case 0:
-    			display0Mode();
-    			counter ++;
-    			noToggleLedOff();
+    			display0Mode(); //Display current mode to see mode at the 7 segment
+    			counter ++; //Change mode
+    			noToggleLedOff(); //Set Mode
     			break;
     		case 1:
     			display1Mode();
@@ -75,7 +70,7 @@ int main(void) {
     		    break;
     	}
     }
-    delay(WHILEDELAY);
+    delay(WHILEDELAY); //Delay for getting hand back from button
     }
 }
 
