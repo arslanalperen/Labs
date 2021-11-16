@@ -1,0 +1,15 @@
+main.c:72:6:EXTI4_15_IRQHandler	0	static
+main.c:83:6:noToggleLedOff	0	static
+main.c:23:5:main	16	static
+main.c:87:6:noToggleLedOn	0	static
+main.c:91:6:Toggle2s	0	static
+main.c:98:6:Toggle1s	0	static
+main.c:105:6:Toggle05s	0	static
+main.c:112:6:Toggle01s	0	static
+main.c:119:6:display0mode	0	static
+main.c:124:6:display1mode	0	static
+main.c:129:6:display2mode	0	static
+main.c:134:6:display3mode	0	static
+main.c:139:6:display4mode	0	static
+main.c:144:6:display5mode	0	static
+main.c:149:6:delay	8	static
