@@ -46,23 +46,23 @@ int main(void) {
     			break;
     		case mode1:
     			display1mode();
-    			noToggleLedOn(mode);
+    			Toggle2s(mode);
     			break;
     		case mode2:
     			display2mode();
-    			Toggle2s(mode);
+    			Toggle1s(mode);
     			break;
     		case mode3:
     			display3mode();
-    			Toggle1s(mode);
+    			Toggle05s(mode);
     			break;
     		case mode4:
     			display4mode();
-    			Toggle05s(mode);
+    			Toggle01s(mode);
     			break;
     		case mode5:
     			display5mode();
-    			Toggle01s(mode);
+    			noToggleLedOn(mode);
     			break;
     	}
     	delay(600000); //Delay for getting hand back from button

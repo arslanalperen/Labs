@@ -294,13 +294,13 @@ int main(void) {
  800022a:	6167      	str	r7, [r4, #20]
 	GPIOB->ODR |= 0x0066;
  800022c:	6963      	ldr	r3, [r4, #20]
-    			Toggle05s(mode);
+    			Toggle01s(mode);
  800022e:	2004      	movs	r0, #4
 	GPIOB->ODR |= 0x0066;
  8000230:	4313      	orrs	r3, r2
  8000232:	6163      	str	r3, [r4, #20]
-    			Toggle05s(mode);
- 8000234:	f7ff ffa6 	bl	8000184 <Toggle05s>
+    			Toggle01s(mode);
+ 8000234:	f7ff ffbe 	bl	80001b4 <Toggle01s>
     	delay(600000); //Delay for getting hand back from button
  8000238:	4b22      	ldr	r3, [pc, #136]	; (80002c4 <main+0xe0>)
     for(; s>0; s--);
@@ -315,13 +315,13 @@ int main(void) {
  8000246:	6167      	str	r7, [r4, #20]
 	GPIOB->ODR |= 0x004F;
  8000248:	6963      	ldr	r3, [r4, #20]
-    			Toggle1s(mode);
+    			Toggle05s(mode);
  800024a:	2003      	movs	r0, #3
 	GPIOB->ODR |= 0x004F;
  800024c:	4313      	orrs	r3, r2
  800024e:	6163      	str	r3, [r4, #20]
-    			Toggle1s(mode);
- 8000250:	f7ff ff80 	bl	8000154 <Toggle1s>
+    			Toggle05s(mode);
+ 8000250:	f7ff ff98 	bl	8000184 <Toggle05s>
     	delay(600000); //Delay for getting hand back from button
  8000254:	4b1b      	ldr	r3, [pc, #108]	; (80002c4 <main+0xe0>)
     for(; s>0; s--);
@@ -333,13 +333,13 @@ int main(void) {
  800025c:	6167      	str	r7, [r4, #20]
 	GPIOB->ODR |= 0x005B;
  800025e:	6963      	ldr	r3, [r4, #20]
-    			Toggle2s(mode);
+    			Toggle1s(mode);
  8000260:	2002      	movs	r0, #2
 	GPIOB->ODR |= 0x005B;
  8000262:	4313      	orrs	r3, r2
  8000264:	6163      	str	r3, [r4, #20]
-    			Toggle2s(mode);
- 8000266:	f7ff ff5d 	bl	8000124 <Toggle2s>
+    			Toggle1s(mode);
+ 8000266:	f7ff ff75 	bl	8000154 <Toggle1s>
     	delay(600000); //Delay for getting hand back from button
  800026a:	4b16      	ldr	r3, [pc, #88]	; (80002c4 <main+0xe0>)
     for(; s>0; s--);
@@ -351,13 +351,13 @@ int main(void) {
  8000272:	6167      	str	r7, [r4, #20]
 	GPIOB->ODR |= 0x0006;
  8000274:	6963      	ldr	r3, [r4, #20]
-    			noToggleLedOn(mode);
+    			Toggle2s(mode);
  8000276:	2001      	movs	r0, #1
 	GPIOB->ODR |= 0x0006;
  8000278:	4313      	orrs	r3, r2
  800027a:	6163      	str	r3, [r4, #20]
-    			noToggleLedOn(mode);
- 800027c:	f7ff ff4a 	bl	8000114 <noToggleLedOn>
+    			Toggle2s(mode);
+ 800027c:	f7ff ff52 	bl	8000124 <Toggle2s>
     	delay(600000); //Delay for getting hand back from button
  8000280:	4b10      	ldr	r3, [pc, #64]	; (80002c4 <main+0xe0>)
     for(; s>0; s--);
@@ -369,13 +369,13 @@ int main(void) {
  8000288:	6167      	str	r7, [r4, #20]
 	GPIOB->ODR |= 0x006D;
  800028a:	6963      	ldr	r3, [r4, #20]
-    			Toggle01s(mode);
+    			noToggleLedOn(mode);
  800028c:	2005      	movs	r0, #5
 	GPIOB->ODR |= 0x006D;
  800028e:	4313      	orrs	r3, r2
  8000290:	6163      	str	r3, [r4, #20]
-    			Toggle01s(mode);
- 8000292:	f7ff ff8f 	bl	80001b4 <Toggle01s>
+    			noToggleLedOn(mode);
+ 8000292:	f7ff ff3f 	bl	8000114 <noToggleLedOn>
     	delay(600000); //Delay for getting hand back from button
  8000296:	4b0b      	ldr	r3, [pc, #44]	; (80002c4 <main+0xe0>)
     for(; s>0; s--);
