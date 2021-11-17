@@ -26,18 +26,20 @@ int main(void) {
     RCC->IOPENR |= (1U << 1);
 
     // Setup PA9, PA10, PA15, PB0, PB1, PB4, PB6, PB7  as output and PB5 as input
-    GPIOB->MODER &= 0xFFFC5555;
-    GPIOB->PUPDR |= (2U << 2*8);
+    GPIOB->MODER &= 0xFFFD5515;
+    GPIOB->PUPDR |= (2U << 2*3);
 
     //Enum for change between modes
     enum changemode {mode0, mode1, mode2, mode3, mode4, mode5}mode;
     mode = mode0;
 
-    EXTI->EXTICR[2] |= (1U << 8*0); //PB8 3. Mux
-    EXTI->RTSR1 |= (1U << 8); //Rising Edge PB8
-    EXTI->IMR1 |= (1U << 8); //Mask for PB8
-    NVIC_SetPriority(EXTI4_15_IRQn, 0);
-    NVIC_EnableIRQ(EXTI4_15_IRQn);
+    EXTI->IMR1 |= (1U << 3); //Mask for PB8
+    EXTI->RTSR1 |= (1U << 3); //Rising Edge PB8
+    EXTI->EXTICR[0] |= (1U << 8*3); //PB8 3. Mux
+
+
+    NVIC_SetPriority(EXTI2_3_IRQn, 0);
+    NVIC_EnableIRQ(EXTI2_3_IRQn);
 
     while(1){
     	switch(mode){
@@ -70,12 +72,12 @@ int main(void) {
     }
 }
 
-void EXTI4_15_IRQHandler(int mode){
+void EXTI2_3_IRQHandler(int mode){
 		if(mode == 5) //If code at the last mode, change to first mode
 			mode = 0;
 	    else
 	    	mode ++; //Change mode
-		EXTI->RPR1 |= (1U << 8);
+		EXTI->RPR1 |= (1U << 3);
 }
 
 void noToggleLedOff(){
@@ -116,7 +118,7 @@ void Toggle01s(){
 
 void display0mode(){
 	GPIOB->ODR &= 0x0000;
-	GPIOB->ODR |= 0x003F;
+	GPIOB->ODR |= 0x0137;
 }
 
 void display1mode(){
@@ -126,12 +128,12 @@ void display1mode(){
 
 void display2mode(){
 	GPIOB->ODR &= 0x0000;
-	GPIOB->ODR |= 0x005B;
+	GPIOB->ODR |= 0x0153;
 }
 
 void display3mode(){
 	GPIOB->ODR &= 0x0000;
-	GPIOB->ODR |= 0x004F;
+	GPIOB->ODR |= 0x0147;
 }
 
 void display4mode(){
@@ -141,7 +143,7 @@ void display4mode(){
 
 void display5mode(){
 	GPIOB->ODR &= 0x0000;
-	GPIOB->ODR |= 0x006D;
+	GPIOB->ODR |= 0x0165;
 }
 
 void delay(volatile uint32_t s) {

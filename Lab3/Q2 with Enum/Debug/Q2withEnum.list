@@ -114,7 +114,7 @@ void Toggle2s(){
  8000128:	6953      	ldr	r3, [r2, #20]
  800012a:	430b      	orrs	r3, r1
  800012c:	6153      	str	r3, [r2, #20]
-	delay(3200000);
+	delay(8000000);
  800012e:	4b08      	ldr	r3, [pc, #32]	; (8000150 <Toggle2s+0x2c>)
 	GPIOB->ODR &= 0x0000;
 	GPIOB->ODR |= 0x006D;
@@ -131,7 +131,7 @@ void delay(volatile uint32_t s) {
  800013a:	6953      	ldr	r3, [r2, #20]
  800013c:	438b      	bics	r3, r1
  800013e:	6153      	str	r3, [r2, #20]
-	delay(3200000);
+	delay(8000000);
  8000140:	4b03      	ldr	r3, [pc, #12]	; (8000150 <Toggle2s+0x2c>)
     for(; s>0; s--);
  8000142:	3b01      	subs	r3, #1
@@ -141,7 +141,7 @@ void delay(volatile uint32_t s) {
  8000148:	4770      	bx	lr
  800014a:	46c0      	nop			; (mov r8, r8)
  800014c:	50000400 	.word	0x50000400
- 8000150:	0030d400 	.word	0x0030d400
+ 8000150:	007a1200 	.word	0x007a1200
 
 08000154 <Toggle1s>:
 	GPIOB->ODR |= (1U << 7);
@@ -150,7 +150,7 @@ void delay(volatile uint32_t s) {
  8000158:	6953      	ldr	r3, [r2, #20]
  800015a:	430b      	orrs	r3, r1
  800015c:	6153      	str	r3, [r2, #20]
-	delay(1600000);
+	delay(4000000);
  800015e:	4b08      	ldr	r3, [pc, #32]	; (8000180 <Toggle1s+0x2c>)
     for(; s>0; s--);
  8000160:	3b01      	subs	r3, #1
@@ -162,7 +162,7 @@ void delay(volatile uint32_t s) {
  800016a:	6953      	ldr	r3, [r2, #20]
  800016c:	438b      	bics	r3, r1
  800016e:	6153      	str	r3, [r2, #20]
-	delay(1600000);
+	delay(4000000);
  8000170:	4b03      	ldr	r3, [pc, #12]	; (8000180 <Toggle1s+0x2c>)
     for(; s>0; s--);
  8000172:	3b01      	subs	r3, #1
@@ -172,7 +172,7 @@ void delay(volatile uint32_t s) {
  8000178:	4770      	bx	lr
  800017a:	46c0      	nop			; (mov r8, r8)
  800017c:	50000400 	.word	0x50000400
- 8000180:	00186a00 	.word	0x00186a00
+ 8000180:	003d0900 	.word	0x003d0900
 
 08000184 <Toggle05s>:
 	GPIOB->ODR |= (1U << 7);
@@ -181,7 +181,7 @@ void delay(volatile uint32_t s) {
  8000188:	6953      	ldr	r3, [r2, #20]
  800018a:	430b      	orrs	r3, r1
  800018c:	6153      	str	r3, [r2, #20]
-	delay(800000);
+	delay(2000000);
  800018e:	4b08      	ldr	r3, [pc, #32]	; (80001b0 <Toggle05s+0x2c>)
     for(; s>0; s--);
  8000190:	3b01      	subs	r3, #1
@@ -193,7 +193,7 @@ void delay(volatile uint32_t s) {
  800019a:	6953      	ldr	r3, [r2, #20]
  800019c:	438b      	bics	r3, r1
  800019e:	6153      	str	r3, [r2, #20]
-	delay(800000);
+	delay(2000000);
  80001a0:	4b03      	ldr	r3, [pc, #12]	; (80001b0 <Toggle05s+0x2c>)
     for(; s>0; s--);
  80001a2:	3b01      	subs	r3, #1
@@ -203,7 +203,7 @@ void delay(volatile uint32_t s) {
  80001a8:	4770      	bx	lr
  80001aa:	46c0      	nop			; (mov r8, r8)
  80001ac:	50000400 	.word	0x50000400
- 80001b0:	000c3500 	.word	0x000c3500
+ 80001b0:	001e8480 	.word	0x001e8480
 
 080001b4 <Toggle01s>:
 	GPIOB->ODR |= (1U << 7);
@@ -212,7 +212,7 @@ void delay(volatile uint32_t s) {
  80001b8:	6953      	ldr	r3, [r2, #20]
  80001ba:	430b      	orrs	r3, r1
  80001bc:	6153      	str	r3, [r2, #20]
-	delay(160000);
+	delay(400000);
  80001be:	4b08      	ldr	r3, [pc, #32]	; (80001e0 <Toggle01s+0x2c>)
     for(; s>0; s--);
  80001c0:	3b01      	subs	r3, #1
@@ -224,7 +224,7 @@ void delay(volatile uint32_t s) {
  80001ca:	6953      	ldr	r3, [r2, #20]
  80001cc:	438b      	bics	r3, r1
  80001ce:	6153      	str	r3, [r2, #20]
-	delay(160000);
+	delay(400000);
  80001d0:	4b03      	ldr	r3, [pc, #12]	; (80001e0 <Toggle01s+0x2c>)
     for(; s>0; s--);
  80001d2:	3b01      	subs	r3, #1
@@ -234,7 +234,7 @@ void delay(volatile uint32_t s) {
  80001d8:	4770      	bx	lr
  80001da:	46c0      	nop			; (mov r8, r8)
  80001dc:	50000400 	.word	0x50000400
- 80001e0:	00027100 	.word	0x00027100
+ 80001e0:	00061a80 	.word	0x00061a80
 
 080001e4 <main>:
     RCC->IOPENR |= (1U << 1);

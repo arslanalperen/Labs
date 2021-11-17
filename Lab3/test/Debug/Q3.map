@@ -183,15 +183,15 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  *(.text)
  .text          0x00000000080000bc       0x48 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v6-m/nofp/crtbegin.o
  *(.text*)
- .text.EXTI2_3_IRQHandler
-                0x0000000008000104       0x10 ./main.o
-                0x0000000008000104                EXTI2_3_IRQHandler
+ .text.EXTI4_15_IRQHandler
+                0x0000000008000104       0x14 ./main.o
+                0x0000000008000104                EXTI4_15_IRQHandler
  .text.noToggleLedOff
-                0x0000000008000114       0x10 ./main.o
-                0x0000000008000114                noToggleLedOff
+                0x0000000008000118       0x10 ./main.o
+                0x0000000008000118                noToggleLedOff
  .text.startup.main
-                0x0000000008000124       0x7c ./main.o
-                0x0000000008000124                main
+                0x0000000008000128       0x78 ./main.o
+                0x0000000008000128                main
  .text.Reset_Handler
                 0x00000000080001a0       0x50 ./startup_stm32g031k8tx.o
                 0x00000000080001a0                Reset_Handler
@@ -207,12 +207,12 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x00000000080001f0                RTC_TAMP_IRQHandler
                 0x00000000080001f0                SPI1_IRQHandler
                 0x00000000080001f0                DMA_Channel1_IRQHandler
+                0x00000000080001f0                EXTI2_3_IRQHandler
                 0x00000000080001f0                I2C2_IRQHandler
                 0x00000000080001f0                TIM17_IRQHandler
                 0x00000000080001f0                DMA_Channel4_5_6_7_IRQHandler
                 0x00000000080001f0                TIM16_IRQHandler
                 0x00000000080001f0                TIM3_IRQHandler
-                0x00000000080001f0                EXTI4_15_IRQHandler
                 0x00000000080001f0                RCC_IRQHandler
                 0x00000000080001f0                Default_Handler
                 0x00000000080001f0                CEC_IRQHandler
@@ -362,10 +362,10 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
 LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libm.a
 LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v6-m/nofp\libgcc.a
 
-.debug_info     0x0000000000000000      0xe21
- .debug_info    0x0000000000000000      0xa33 ./main.o
- .debug_info    0x0000000000000a33       0x22 ./startup_stm32g031k8tx.o
- .debug_info    0x0000000000000a55      0x3cc ./system_stm32g0xx.o
+.debug_info     0x0000000000000000      0xe25
+ .debug_info    0x0000000000000000      0xa37 ./main.o
+ .debug_info    0x0000000000000a37       0x22 ./startup_stm32g031k8tx.o
+ .debug_info    0x0000000000000a59      0x3cc ./system_stm32g0xx.o
 
 .debug_abbrev   0x0000000000000000      0x3f7
  .debug_abbrev  0x0000000000000000      0x2cc ./main.o
@@ -384,22 +384,22 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_aranges
                 0x00000000000000b8       0x28 ./system_stm32g0xx.o
 
-.debug_ranges   0x0000000000000000      0x128
- .debug_ranges  0x0000000000000000       0xf0 ./main.o
- .debug_ranges  0x00000000000000f0       0x20 ./startup_stm32g031k8tx.o
- .debug_ranges  0x0000000000000110       0x18 ./system_stm32g0xx.o
+.debug_ranges   0x0000000000000000       0xf8
+ .debug_ranges  0x0000000000000000       0xc0 ./main.o
+ .debug_ranges  0x00000000000000c0       0x20 ./startup_stm32g031k8tx.o
+ .debug_ranges  0x00000000000000e0       0x18 ./system_stm32g0xx.o
 
-.debug_line     0x0000000000000000      0xa41
- .debug_line    0x0000000000000000      0x680 ./main.o
- .debug_line    0x0000000000000680       0xa1 ./startup_stm32g031k8tx.o
- .debug_line    0x0000000000000721      0x320 ./system_stm32g0xx.o
+.debug_line     0x0000000000000000      0xa29
+ .debug_line    0x0000000000000000      0x668 ./main.o
+ .debug_line    0x0000000000000668       0xa1 ./startup_stm32g031k8tx.o
+ .debug_line    0x0000000000000709      0x320 ./system_stm32g0xx.o
 
-.debug_str      0x0000000000000000      0x66f
- .debug_str     0x0000000000000000      0x5a3 ./main.o
-                                        0x601 (size before relaxing)
- .debug_str     0x00000000000005a3       0x4e ./startup_stm32g031k8tx.o
+.debug_str      0x0000000000000000      0x670
+ .debug_str     0x0000000000000000      0x5a4 ./main.o
+                                        0x602 (size before relaxing)
+ .debug_str     0x00000000000005a4       0x4e ./startup_stm32g031k8tx.o
                                          0x74 (size before relaxing)
- .debug_str     0x00000000000005f1       0x7e ./system_stm32g0xx.o
+ .debug_str     0x00000000000005f2       0x7e ./system_stm32g0xx.o
                                         0x2ec (size before relaxing)
 
 .comment        0x0000000000000000       0x53

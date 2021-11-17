@@ -21,23 +21,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   8 .ARM.attributes 00000028  00000000  00000000  0001026c  2**0
                   CONTENTS, READONLY
-  9 .debug_info   00000e21  00000000  00000000  00010294  2**0
+  9 .debug_info   00000e25  00000000  00000000  00010294  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 10 .debug_abbrev 000003f7  00000000  00000000  000110b5  2**0
+ 10 .debug_abbrev 000003f7  00000000  00000000  000110b9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 11 .debug_loc    000001ac  00000000  00000000  000114ac  2**0
+ 11 .debug_loc    000001ac  00000000  00000000  000114b0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 12 .debug_aranges 000000e0  00000000  00000000  00011658  2**3
+ 12 .debug_aranges 000000e0  00000000  00000000  00011660  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_ranges 00000128  00000000  00000000  00011738  2**3
+ 13 .debug_ranges 000000f8  00000000  00000000  00011740  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_line   00000a41  00000000  00000000  00011860  2**0
+ 14 .debug_line   00000a29  00000000  00000000  00011838  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_str    0000066f  00000000  00000000  000122a1  2**0
+ 15 .debug_str    00000670  00000000  00000000  00012261  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .comment      00000053  00000000  00000000  00012910  2**0
+ 16 .comment      00000053  00000000  00000000  000128d1  2**0
                   CONTENTS, READONLY
- 17 .debug_frame  00000174  00000000  00000000  00012964  2**2
+ 17 .debug_frame  00000174  00000000  00000000  00012924  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -76,124 +76,125 @@ Disassembly of section .text:
  80000fc:	20000004 	.word	0x20000004
  8000100:	0800024c 	.word	0x0800024c
 
-08000104 <EXTI2_3_IRQHandler>:
-void EXTI2_3_IRQHandler(int mode){
+08000104 <EXTI4_15_IRQHandler>:
+void EXTI4_15_IRQHandler(int mode){
 		if(mode == 5) //If code at the last mode, change to first mode
 			mode = 0;
 	    else
 	    	mode ++; //Change mode
-		EXTI->RPR1 |= (1U << 3);
- 8000104:	2108      	movs	r1, #8
- 8000106:	4a02      	ldr	r2, [pc, #8]	; (8000110 <EXTI2_3_IRQHandler+0xc>)
- 8000108:	68d3      	ldr	r3, [r2, #12]
- 800010a:	430b      	orrs	r3, r1
- 800010c:	60d3      	str	r3, [r2, #12]
+		EXTI->RPR1 |= (1U << 8);
+ 8000104:	2380      	movs	r3, #128	; 0x80
+ 8000106:	4a03      	ldr	r2, [pc, #12]	; (8000114 <EXTI4_15_IRQHandler+0x10>)
+ 8000108:	005b      	lsls	r3, r3, #1
+ 800010a:	68d1      	ldr	r1, [r2, #12]
+ 800010c:	430b      	orrs	r3, r1
+ 800010e:	60d3      	str	r3, [r2, #12]
 }
- 800010e:	4770      	bx	lr
- 8000110:	40021800 	.word	0x40021800
+ 8000110:	4770      	bx	lr
+ 8000112:	46c0      	nop			; (mov r8, r8)
+ 8000114:	40021800 	.word	0x40021800
 
-08000114 <noToggleLedOff>:
+08000118 <noToggleLedOff>:
 
 void noToggleLedOff(){
 	GPIOB->ODR &= ~(1U << 7);
- 8000114:	2180      	movs	r1, #128	; 0x80
- 8000116:	4a02      	ldr	r2, [pc, #8]	; (8000120 <noToggleLedOff+0xc>)
- 8000118:	6953      	ldr	r3, [r2, #20]
- 800011a:	438b      	bics	r3, r1
- 800011c:	6153      	str	r3, [r2, #20]
+ 8000118:	2180      	movs	r1, #128	; 0x80
+ 800011a:	4a02      	ldr	r2, [pc, #8]	; (8000124 <noToggleLedOff+0xc>)
+ 800011c:	6953      	ldr	r3, [r2, #20]
+ 800011e:	438b      	bics	r3, r1
+ 8000120:	6153      	str	r3, [r2, #20]
 }
- 800011e:	4770      	bx	lr
- 8000120:	50000400 	.word	0x50000400
+ 8000122:	4770      	bx	lr
+ 8000124:	50000400 	.word	0x50000400
 
-08000124 <main>:
+08000128 <main>:
     RCC->IOPENR |= (1U << 1);
- 8000124:	2102      	movs	r1, #2
+ 8000128:	2102      	movs	r1, #2
+ 800012a:	4a18      	ldr	r2, [pc, #96]	; (800018c <main+0x64>)
 int main(void) {
- 8000126:	b570      	push	{r4, r5, r6, lr}
-    EXTI->IMR1 |= (1U << 3); //Mask for PB8
- 8000128:	2508      	movs	r5, #8
-    RCC->IOPENR |= (1U << 1);
- 800012a:	4a17      	ldr	r2, [pc, #92]	; (8000188 <main+0x64>)
-    GPIOB->MODER &= 0xFFFD5515;
- 800012c:	4c17      	ldr	r4, [pc, #92]	; (800018c <main+0x68>)
+ 800012c:	b570      	push	{r4, r5, r6, lr}
     RCC->IOPENR |= (1U << 1);
  800012e:	6b53      	ldr	r3, [r2, #52]	; 0x34
+    GPIOB->MODER &= 0xFFFC5555;
+ 8000130:	4c17      	ldr	r4, [pc, #92]	; (8000190 <main+0x68>)
+    RCC->IOPENR |= (1U << 1);
+ 8000132:	430b      	orrs	r3, r1
+ 8000134:	6353      	str	r3, [r2, #52]	; 0x34
+    GPIOB->MODER &= 0xFFFC5555;
+ 8000136:	6823      	ldr	r3, [r4, #0]
+ 8000138:	4a16      	ldr	r2, [pc, #88]	; (8000194 <main+0x6c>)
+    EXTI->EXTICR[2] |= (1U << 8*0); //PB8 3. Mux
+ 800013a:	3901      	subs	r1, #1
+    GPIOB->MODER &= 0xFFFC5555;
+ 800013c:	4013      	ands	r3, r2
+ 800013e:	6023      	str	r3, [r4, #0]
+    GPIOB->PUPDR |= (2U << 2*8);
+ 8000140:	2380      	movs	r3, #128	; 0x80
+ 8000142:	68e2      	ldr	r2, [r4, #12]
+ 8000144:	029b      	lsls	r3, r3, #10
+ 8000146:	4313      	orrs	r3, r2
+ 8000148:	60e3      	str	r3, [r4, #12]
+    EXTI->EXTICR[2] |= (1U << 8*0); //PB8 3. Mux
+ 800014a:	4b13      	ldr	r3, [pc, #76]	; (8000198 <main+0x70>)
 	GPIOB->ODR &= ~(1U << 7);
 	delay(160000);
 }
 
 void display0mode(){
 	GPIOB->ODR &= 0x0000;
- 8000130:	2600      	movs	r6, #0
-    RCC->IOPENR |= (1U << 1);
- 8000132:	430b      	orrs	r3, r1
- 8000134:	6353      	str	r3, [r2, #52]	; 0x34
-    GPIOB->MODER &= 0xFFFD5515;
- 8000136:	6823      	ldr	r3, [r4, #0]
- 8000138:	4a15      	ldr	r2, [pc, #84]	; (8000190 <main+0x6c>)
-    GPIOB->PUPDR |= (2U << 2*3);
- 800013a:	317e      	adds	r1, #126	; 0x7e
-    GPIOB->MODER &= 0xFFFD5515;
- 800013c:	4013      	ands	r3, r2
- 800013e:	6023      	str	r3, [r4, #0]
-    GPIOB->PUPDR |= (2U << 2*3);
- 8000140:	68e3      	ldr	r3, [r4, #12]
- 8000142:	430b      	orrs	r3, r1
- 8000144:	60e3      	str	r3, [r4, #12]
-    EXTI->IMR1 |= (1U << 3); //Mask for PB8
- 8000146:	4b13      	ldr	r3, [pc, #76]	; (8000194 <main+0x70>)
- 8000148:	5858      	ldr	r0, [r3, r1]
- 800014a:	4328      	orrs	r0, r5
- 800014c:	5058      	str	r0, [r3, r1]
-    EXTI->RTSR1 |= (1U << 3); //Rising Edge PB8
- 800014e:	681a      	ldr	r2, [r3, #0]
+ 800014c:	2600      	movs	r6, #0
+    EXTI->EXTICR[2] |= (1U << 8*0); //PB8 3. Mux
+ 800014e:	6e9a      	ldr	r2, [r3, #104]	; 0x68
+	GPIOB->ODR |= 0x003F;
+ 8000150:	253f      	movs	r5, #63	; 0x3f
+    EXTI->EXTICR[2] |= (1U << 8*0); //PB8 3. Mux
+ 8000152:	430a      	orrs	r2, r1
+ 8000154:	669a      	str	r2, [r3, #104]	; 0x68
+    EXTI->RTSR1 |= (1U << 8); //Rising Edge PB8
+ 8000156:	2280      	movs	r2, #128	; 0x80
+ 8000158:	6819      	ldr	r1, [r3, #0]
+ 800015a:	0052      	lsls	r2, r2, #1
+ 800015c:	4311      	orrs	r1, r2
+ 800015e:	6019      	str	r1, [r3, #0]
+    EXTI->IMR1 |= (1U << 8); //Mask for PB8
+ 8000160:	2180      	movs	r1, #128	; 0x80
+ 8000162:	5858      	ldr	r0, [r3, r1]
+ 8000164:	4302      	orrs	r2, r0
  */
 __STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
 {
   if ((int32_t)(IRQn) >= 0)
   {
     NVIC->IP[_IP_IDX(IRQn)]  = ((uint32_t)(NVIC->IP[_IP_IDX(IRQn)]  & ~(0xFFUL << _BIT_SHIFT(IRQn))) |
- 8000150:	4811      	ldr	r0, [pc, #68]	; (8000198 <main+0x74>)
- 8000152:	432a      	orrs	r2, r5
- 8000154:	601a      	str	r2, [r3, #0]
-    EXTI->EXTICR[0] |= (1U << 8*3); //PB8 3. Mux
- 8000156:	2280      	movs	r2, #128	; 0x80
- 8000158:	6e19      	ldr	r1, [r3, #96]	; 0x60
- 800015a:	0452      	lsls	r2, r2, #17
- 800015c:	430a      	orrs	r2, r1
- 800015e:	21c1      	movs	r1, #193	; 0xc1
- 8000160:	661a      	str	r2, [r3, #96]	; 0x60
- 8000162:	4b0e      	ldr	r3, [pc, #56]	; (800019c <main+0x78>)
- 8000164:	0089      	lsls	r1, r1, #2
- 8000166:	585a      	ldr	r2, [r3, r1]
-	GPIOB->ODR |= 0x0137;
- 8000168:	2538      	movs	r5, #56	; 0x38
- 800016a:	4002      	ands	r2, r0
- 800016c:	505a      	str	r2, [r3, r1]
+ 8000166:	20c1      	movs	r0, #193	; 0xc1
+ 8000168:	505a      	str	r2, [r3, r1]
+ 800016a:	4a0c      	ldr	r2, [pc, #48]	; (800019c <main+0x74>)
+ 800016c:	0080      	lsls	r0, r0, #2
+ 800016e:	5813      	ldr	r3, [r2, r0]
+ 8000170:	021b      	lsls	r3, r3, #8
+ 8000172:	0a1b      	lsrs	r3, r3, #8
+ 8000174:	5013      	str	r3, [r2, r0]
     NVIC->ISER[0U] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
- 800016e:	2240      	movs	r2, #64	; 0x40
- 8000170:	35ff      	adds	r5, #255	; 0xff
- 8000172:	601a      	str	r2, [r3, #0]
+ 8000176:	6011      	str	r1, [r2, #0]
 	GPIOB->ODR &= 0x0000;
- 8000174:	6963      	ldr	r3, [r4, #20]
- 8000176:	6166      	str	r6, [r4, #20]
-	GPIOB->ODR |= 0x0137;
  8000178:	6963      	ldr	r3, [r4, #20]
+ 800017a:	6166      	str	r6, [r4, #20]
+	GPIOB->ODR |= 0x003F;
+ 800017c:	6963      	ldr	r3, [r4, #20]
     		    noToggleLedOff(mode); //Set mode
- 800017a:	2000      	movs	r0, #0
-	GPIOB->ODR |= 0x0137;
- 800017c:	432b      	orrs	r3, r5
- 800017e:	6163      	str	r3, [r4, #20]
+ 800017e:	2000      	movs	r0, #0
+	GPIOB->ODR |= 0x003F;
+ 8000180:	432b      	orrs	r3, r5
+ 8000182:	6163      	str	r3, [r4, #20]
     		    noToggleLedOff(mode); //Set mode
- 8000180:	f7ff ffc8 	bl	8000114 <noToggleLedOff>
+ 8000184:	f7ff ffc8 	bl	8000118 <noToggleLedOff>
     		    break;
- 8000184:	e7f6      	b.n	8000174 <main+0x50>
- 8000186:	46c0      	nop			; (mov r8, r8)
- 8000188:	40021000 	.word	0x40021000
- 800018c:	50000400 	.word	0x50000400
- 8000190:	fffd5515 	.word	0xfffd5515
- 8000194:	40021800 	.word	0x40021800
- 8000198:	ff00ffff 	.word	0xff00ffff
+ 8000188:	e7f6      	b.n	8000178 <main+0x50>
+ 800018a:	46c0      	nop			; (mov r8, r8)
+ 800018c:	40021000 	.word	0x40021000
+ 8000190:	50000400 	.word	0x50000400
+ 8000194:	fffc5555 	.word	0xfffc5555
+ 8000198:	40021800 	.word	0x40021800
  800019c:	e000e100 	.word	0xe000e100
 
 080001a0 <Reset_Handler>:
@@ -273,7 +274,7 @@ LoopFillZerobss:
  80001ce:	f000 f819 	bl	8000204 <__libc_init_array>
 /* Call the application's entry point.*/
   bl main
- 80001d2:	f7ff ffa7 	bl	8000124 <main>
+ 80001d2:	f7ff ffa9 	bl	8000128 <main>
 
 080001d6 <LoopForever>:
 

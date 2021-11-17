@@ -79,30 +79,30 @@ void noToggleLedOn(){
 
 void Toggle2s(){
 	GPIOB->ODR |= (1U << 7);
-	delay(3200000);
+	delay(8000000);
 	GPIOB->ODR &= ~(1U << 7);
-	delay(3200000);
+	delay(8000000);
 }
 
 void Toggle1s(){
 	GPIOB->ODR |= (1U << 7);
-	delay(1600000);
+	delay(4000000);
 	GPIOB->ODR &= ~(1U << 7);
-	delay(1600000);
+	delay(4000000);
 }
 
 void Toggle05s(){
 	GPIOB->ODR |= (1U << 7);
-	delay(800000);
+	delay(2000000);
 	GPIOB->ODR &= ~(1U << 7);
-	delay(800000);
+	delay(2000000);
 }
 
 void Toggle01s(){
 	GPIOB->ODR |= (1U << 7);
-	delay(160000);
+	delay(400000);
 	GPIOB->ODR &= ~(1U << 7);
-	delay(160000);
+	delay(400000);
 }
 
 void display0mode(){
