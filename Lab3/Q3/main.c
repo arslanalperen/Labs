@@ -20,24 +20,23 @@ void display2mode();
 void display3mode();
 void display4mode();
 void display5mode();
+void EXTI2_3_IRQHandler(int mode);
 
 int main(void) {
     // Enable GPIOB clock
     RCC->IOPENR |= (1U << 1);
 
-    // Setup PA9, PA10, PA15, PB0, PB1, PB4, PB6, PB7  as output and PB5 as input
-    GPIOB->MODER &= 0xFFFD5515;
+    // Setup PB0, PB1, ... PB8 (except PB3) as output and PB3 as input
+    GPIOB->MODER &= 0xFFF55515;
     GPIOB->PUPDR |= (2U << 2*3);
 
     //Enum for change between modes
-    enum changemode {mode0, mode1, mode2, mode3, mode4, mode5}mode;
+    enum changeMode {mode0, mode1, mode2, mode3, mode4, mode5}mode;
     mode = mode0;
 
-    EXTI->IMR1 |= (1U << 3); //Mask for PB8
-    EXTI->RTSR1 |= (1U << 3); //Rising Edge PB8
-    EXTI->EXTICR[0] |= (1U << 8*3); //PB8 3. Mux
-
-
+    EXTI->IMR1 |= (1U << 3); //Mask for PB3
+    EXTI->RTSR1 |= (1U << 3); //Rising Edge PB3
+    EXTI->EXTICR[0] |= (1U << 8*3); //PB3 0 Mux
     NVIC_SetPriority(EXTI2_3_IRQn, 0);
     NVIC_EnableIRQ(EXTI2_3_IRQn);
 
@@ -49,35 +48,37 @@ int main(void) {
     		    break;
     		case mode1:
     			display1mode();
-    			noToggleLedOn(mode);
+    			Toggle2s(mode);
     		    break;
     		case mode2:
     			display2mode();
-    			Toggle2s(mode);
+    			Toggle1s(mode);
     			break;
     		case mode3:
-    		    display3mode();
-    		    Toggle1s(mode);
+    			display3mode();
+    			Toggle05s(mode);
     		    break;
     		case mode4:
     			display4mode();
-    			Toggle05s(mode);
+    			Toggle01s(mode);
     		    break;
     		case mode5:
     			display5mode();
-    			Toggle01s(mode);
+    			noToggleLedOn(mode);
     			break;
     	}
-    	//delay(600000); //Delay for getting hand back from button
+    	delay(600000); //Delay for getting hand back from button
     }
 }
 
 void EXTI2_3_IRQHandler(int mode){
-		if(mode == 5) //If code at the last mode, change to first mode
-			mode = 0;
-	    else
-	    	mode ++; //Change mode
-		EXTI->RPR1 |= (1U << 3);
+	//If code at the last mode, change to first mode
+	GPIOB->ODR |= (1U << 9);
+	if(mode == 5)
+		mode = 0;
+	else
+		mode ++; //Change mode
+	EXTI->RPR1 |= (1U << 3);
 }
 
 void noToggleLedOff(){

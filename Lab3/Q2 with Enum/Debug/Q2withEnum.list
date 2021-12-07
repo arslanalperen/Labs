@@ -237,20 +237,20 @@ void delay(volatile uint32_t s) {
  80001e0:	00061a80 	.word	0x00061a80
 
 080001e4 <main>:
-    RCC->IOPENR |= (1U << 1);
+    RCC->IOPENR |= (2U);
  80001e4:	2102      	movs	r1, #2
 int main(void) {
  80001e6:	b5f0      	push	{r4, r5, r6, r7, lr}
  80001e8:	46c6      	mov	lr, r8
-    RCC->IOPENR |= (1U << 1);
+    RCC->IOPENR |= (2U);
  80001ea:	4a32      	ldr	r2, [pc, #200]	; (80002b4 <main+0xd0>)
     GPIOB->MODER &= 0xFFFC5555;
  80001ec:	4c32      	ldr	r4, [pc, #200]	; (80002b8 <main+0xd4>)
-    RCC->IOPENR |= (1U << 1);
+    RCC->IOPENR |= (2U);
  80001ee:	6b53      	ldr	r3, [r2, #52]	; 0x34
 int main(void) {
  80001f0:	b500      	push	{lr}
-    RCC->IOPENR |= (1U << 1);
+    RCC->IOPENR |= (2U);
  80001f2:	430b      	orrs	r3, r1
  80001f4:	6353      	str	r3, [r2, #52]	; 0x34
     GPIOB->MODER &= 0xFFFC5555;

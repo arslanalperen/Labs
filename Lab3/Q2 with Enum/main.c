@@ -22,9 +22,9 @@ void display5mode();
 
 int main(void) {
     // Enable GPIOB clock
-    RCC->IOPENR |= (1U << 1);
+    RCC->IOPENR |= (2U);
 
-    // Setup PA9, PA10, PA15, PB0, PB1, PB4, PB6, PB7  as output and PB5 as input
+    // Setup PB0, PB1, ... PB7 as output and PB8 as input
     GPIOB->MODER &= 0xFFFC5555;
 
     //Enum for change between modes
