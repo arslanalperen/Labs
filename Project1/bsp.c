@@ -2,6 +2,11 @@
 #include "stm32g0xx.h"
 #include "string.h"
 
+/*
+void delay(volatile uint32_t s) {
+    for(; s>0; s--);
+}
+*/
 void BSP_led_init(void){
     /* Enable GPIOC clock */
     RCC -> IOPENR |= (1U << 2);
@@ -65,11 +70,49 @@ void BSP_led_toggle(void){
     GPIOC->ODR ^= (1U << 6);
 }
 
-void BSP_SetSSD(char pin){
-	char type = pin[0];
+void BSP_SetSSD(char *pin){
 	char pinNumber = pin[1];
+	char type = pin[0];
+
+	BSP_SetDigitalPins(pinNumber);
+
+	/*
+	//char *p = &type;
+	//BSP_SetDigitalPins(pinNumber);
+
+	//char pinName = 'D';
+	//char *ptr = &pinName;
+	//int cmp = strcmp(p,ptr);
+	if(type == 'D'){
+		BSP_SetDigitalPins(pinNumber);
+	}
+	else{
+		BSP_SetAnalogPins(pinNumber);
+	}
+	*/
 }
 
-void delay(volatile uint32_t s) {
-    for(; s>0; s--);
+void BSP_SetDigitalPins(char pinNumber){
+	int pinNumberInt = atoi(pinNumber);
+	if(pinNumberInt == 2 | pinNumberInt == 4 | pinNumberInt == 5 | pinNumberInt == 9){
+		RCC->IOPENR |= (1U << 0);
+		GPIOA->MODER &= ~(3U << 2*pinNumberInt);
+		GPIOA->MODER |=  (1U << 2*pinNumberInt);
+	}
+	else {
+		RCC->IOPENR |= (1U << 1);
+		GPIOB->MODER &= ~(3U << 2*pinNumberInt);
+		GPIOB->MODER |=  (1U << 2*pinNumberInt);
+	}
+}
+
+void BSP_SetAnalogPins(char pinNumber){
+
+}
+
+void BSP_DisplaySSD(struct ssdPin){
+	switch(displayChar){
+	case '0':
+
+	}
 }

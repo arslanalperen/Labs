@@ -287,26 +287,26 @@ void delay(volatile uint32_t s) {
  8000230:	00027100 	.word	0x00027100
 
 08000234 <main>:
-    RCC->IOPENR |= (1U << 1);
+	RCC->IOPENR |= (1U << 1);
  8000234:	2102      	movs	r1, #2
 int main(void) {
  8000236:	b5f0      	push	{r4, r5, r6, r7, lr}
  8000238:	46c6      	mov	lr, r8
-    RCC->IOPENR |= (1U << 1);
+	RCC->IOPENR |= (1U << 1);
  800023a:	4a35      	ldr	r2, [pc, #212]	; (8000310 <main+0xdc>)
     GPIOB->MODER &= 0xFFFC5555;
  800023c:	4c35      	ldr	r4, [pc, #212]	; (8000314 <main+0xe0>)
-    RCC->IOPENR |= (1U << 1);
+	RCC->IOPENR |= (1U << 1);
  800023e:	6b53      	ldr	r3, [r2, #52]	; 0x34
 int main(void) {
  8000240:	b500      	push	{lr}
-    RCC->IOPENR |= (1U << 1);
+	RCC->IOPENR |= (1U << 1);
  8000242:	430b      	orrs	r3, r1
  8000244:	6353      	str	r3, [r2, #52]	; 0x34
     GPIOB->MODER &= 0xFFFC5555;
  8000246:	6823      	ldr	r3, [r4, #0]
  8000248:	4a33      	ldr	r2, [pc, #204]	; (8000318 <main+0xe4>)
-    int value = GPIOB->IDR &= (1U << 8);
+    int value = GPIOB->IDR &= (1U << 8); //Getting button value
  800024a:	2580      	movs	r5, #128	; 0x80
     GPIOB->MODER &= 0xFFFC5555;
  800024c:	4013      	ands	r3, r2
@@ -321,7 +321,7 @@ void display5Mode(){
  8000252:	4698      	mov	r8, r3
  8000254:	4e31      	ldr	r6, [pc, #196]	; (800031c <main+0xe8>)
  8000256:	4f32      	ldr	r7, [pc, #200]	; (8000320 <main+0xec>)
-    int value = GPIOB->IDR &= (1U << 8);
+    int value = GPIOB->IDR &= (1U << 8); //Getting button value
  8000258:	006d      	lsls	r5, r5, #1
  800025a:	6923      	ldr	r3, [r4, #16]
  800025c:	402b      	ands	r3, r5
@@ -351,7 +351,7 @@ void display5Mode(){
  800027e:	6033      	str	r3, [r6, #0]
     		    Toggle05s();
  8000280:	f7ff ff8c 	bl	800019c <Toggle05s>
-    delay(WHILEDELAY);
+    delay(WHILEDELAY); //Delay for getting hand back from button
  8000284:	4b27      	ldr	r3, [pc, #156]	; (8000324 <main+0xf0>)
     for(; s>0; s--);
  8000286:	3b01      	subs	r3, #1
@@ -426,7 +426,7 @@ void display5Mode(){
  80002e2:	6963      	ldr	r3, [r4, #20]
  80002e4:	4313      	orrs	r3, r2
  80002e6:	6163      	str	r3, [r4, #20]
-    			counter ++;
+    			counter ++; //Change mode
  80002e8:	2301      	movs	r3, #1
  80002ea:	6033      	str	r3, [r6, #0]
 	GPIOB->ODR &= ~(1U << 7);
