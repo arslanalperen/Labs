@@ -1,3 +1,2 @@
 # Microprocessors Lesson
-Student Notes
-Gebze Technical University
+Student Notes - Gebze Technical University
