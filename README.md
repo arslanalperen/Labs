@@ -1,2 +1,3 @@
-# Labs
- Microprocessors Labs
+# Microprocessors Lesson
+Student Notes
+Gebze Technical University
